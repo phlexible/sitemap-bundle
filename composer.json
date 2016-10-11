@@ -11,6 +11,7 @@
     },
     "require": {
         "php": ">=5.6.0",
+        "thepixeldeveloper/sitemap": "^4.4.2",
         "phlexible/tree-bundle": "~1.0"
     },
     "require-dev": {
