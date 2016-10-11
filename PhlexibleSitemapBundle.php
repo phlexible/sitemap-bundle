@@ -1,40 +1,18 @@
 <?php
-/**
- * MAKEweb
- *
- * PHP Version 5
- *
- * @category    Makeweb
- * @package     Makeweb_GoogleSitemaps
- * @copyright   2010 brainbits GmbH (http://www.brainbits.net)
- * @author      Franz Hanenberg <franzhanenberg@googlemail.com>
- * @author      Marko Schmitz <schmitz.marko@googlemail.com>
- * @version     SVN: $Id$
- */
 
 /**
- * Google sitemap component
+ * phlexible
  *
- * @category    Makeweb
- * @package     Makeweb_GoogleSitemaps
- * @author      Franz Hanenberg <franzhanenberg@googlemail.com>
- * @author      Marko Schmitz <schmitz.marko@googlemail.com>
- * @copyright   2010 brainbits GmbH (http://www.brainbits.net)
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
-class Makeweb_GoogleSitemaps_Component extends MWF_Component_Abstract
+
+namespace Phlexible\Bundle\SitemapBundle;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class PhlexibleSitemapBundle extends Bundle
 {
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this
-            ->setVersion('0.6.7')
-            ->setId('googlesitemaps')
-            ->setFile(__FILE__)
-            ->setPackage('makeweb');
-    }
-
     public function initContainer(MWF_Container_ContainerBuilder $container, array $configs)
     {
         $processor = new Symfony\Component\Config\Definition\Processor();

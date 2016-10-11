@@ -1,25 +1,10 @@
 <?php
-/**
- * MAKEweb
- *
- * PHP Version 5
- *
- * @category    Makeweb
- * @package     Makeweb_GoogleSitemaps
- * @copyright   2010 brainbits GmbH (http://www.brainbits.net)
- * @version     SVN: $Id$
- */
 
-/**
- * Instances Overview Controller
- *
- * @category    Makeweb
- * @package     Makeweb_GoogleSitemaps
- * @author      Franz Hanenberg <franzhanenberg@googlemail.com>
- * @author      Marko Schmitz <schmitz.marko@googlemail.com>
- * @copyright   2010 brainbits GmbH (http://www.brainbits.net)
- */
-class Googlesitemaps_DataController extends MWF_Controller_Action
+namespace Phlexible\Bundle\SitemapBundle;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+class SitemapController extends Controller
 {
     /**
      * Array of requestParams
@@ -75,6 +60,11 @@ class Googlesitemaps_DataController extends MWF_Controller_Action
 
         $request = new Makeweb_Frontend_Request($this->_response, null, false, $this->getRequest()->getBaseUrl());
         $this->_requestParams = $request->getHandler()->process($this->_urlParts, $this->_siterootUrl);
+    }
+
+    public function sitemapAction()
+    {
+        // TODO
     }
 
     public function indexAction()
