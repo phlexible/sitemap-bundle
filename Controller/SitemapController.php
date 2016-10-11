@@ -3,6 +3,8 @@
 namespace Phlexible\Bundle\SitemapBundle;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SitemapController extends Controller
 {
@@ -62,12 +64,19 @@ class SitemapController extends Controller
         $this->_requestParams = $request->getHandler()->process($this->_urlParts, $this->_siterootUrl);
     }
 
-    public function sitemapAction()
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     * @Route("/sitemap.xml", name="sitemap_index")
+     */
+    public function indexAction(Request $request)
     {
         // TODO
+
     }
 
-    public function indexAction()
+    public function indexOldAction()
     {
         if (false !== $this->getRequest()->getParam('language', false))
         {
