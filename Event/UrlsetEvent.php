@@ -1,13 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jdschulze
- * Date: 12.10.16
- * Time: 12:12
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
+
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\Urlset;
 
@@ -26,20 +28,16 @@ class UrlsetEvent extends Event
     /**
      * @var int
      */
-    private $siteRootId;
+    private $siteRoot;
 
     /**
      * @param Urlset $urlset
-     * @param int $siteRootId
+     * @param Siteroot $siteroot
      */
-    public function __construct(Urlset $urlset, $siteRootId)
+    public function __construct(Urlset $urlset, Siteroot $siteroot)
     {
         $this->urlset = $urlset;
-
-        if (!is_int($siteRootId)) {
-            throw new InvalidArgumentException("Invalid Site Root Id $siteRootId");
-        }
-        $this->siteRootId = $siteRootId;
+        $this->siteRoot = $siteroot;
     }
 
     /**
@@ -48,5 +46,10 @@ class UrlsetEvent extends Event
     public function getUrlset()
     {
         return $this->urlset;
+    }
+
+    public function getSiteroot()
+    {
+        return $this->siteRoot;
     }
 }

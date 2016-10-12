@@ -1,9 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jdschulze
- * Date: 11.10.16
- * Time: 16:29
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
@@ -15,6 +15,7 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Thepixeldeveloper\Sitemap\Output;
@@ -44,6 +45,11 @@ class SitemapGenerator
     private $router;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @var string
      */
     private $languagesAvailable;
@@ -54,6 +60,7 @@ class SitemapGenerator
      * @param ContentTreeManagerInterface $contentTreeManager
      * @param CountryCollection $countryCollection
      * @param RouterInterface $router
+     * @param EventDispatcherInterface $eventDispatcher
      * @param string $languagesAvailable
      */
     public function __construct(
@@ -61,18 +68,28 @@ class SitemapGenerator
         ContentTreeManagerInterface $contentTreeManager,
         CountryCollection $countryCollection,
         RouterInterface $router,
+        EventDispatcherInterface $eventDispatcher,
         $languagesAvailable
     ) {
         $this->treeManager = $treeManager;
         $this->contentTreeManager = $contentTreeManager;
         $this->countryCollection = $countryCollection;
         $this->router = $router;
+        $this->eventDispatcher = $eventDispatcher;
         $this->languagesAvailable = $languagesAvailable;
     }
 
-    public function generateSitemap(Siteroot $siteRoot)
+    /**
+     * @param string $siteRootId
+     * @return string
+     */
+    public function generateSitemap($siteRootId)
     {
-        $siteRootId = $siteRoot->getId();
+//        $siteRootId = '1bcaab4d-098e-4737-ac93-53cae9d8388';
+        if (!is_string($siteRootId)) {
+            throw new InvalidArgumentException("Site root id must be a string! $siteRootId");
+        }
+
         $tree = $this->treeManager->getBySiteRootId($siteRootId);
         if (!$tree) {
             throw new InvalidArgumentException("Tree for site root id $siteRootId not found");
@@ -102,17 +119,15 @@ class SitemapGenerator
                 $countries = $this->countryCollection->filterLanguage($language);
                 foreach ($countries as $country) {
                     $loc = $this->generateUrl($treeNode, (string) $country, $language);
-                    // DEBUG:
-//                    echo "Language: $language; Country: $country; URL: $loc.<br>";
                     $urlElement = (new Url($loc));
                     $urlSet->addUrl($urlElement);
                 }
             }
         }
-        // DEBUG:
-        echo (new Output())->getOutput($urlSet);
 
-        return 0;
+        $sitemap = (new Output())->getOutput($urlSet);
+
+        return $sitemap;
     }
 
     /**

@@ -6,10 +6,17 @@ services:
             - "@phlexible_tree.content_tree_manager"
             - "@phlexible_country_context.country_collection"
             - "@router"
+            - "@event_dispatcher"
             - "%phlexible_cms.languages.available%"
+
+    phlexible_sitemap.sitemap_cache:
+        class: Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCache
+        arguments:
+            - "@phlexible_sitemap.sitemap_generator"
+            - "%kernel.cache_dir%/sitemap"
 
     phlexible_sitemap.sitemap_controller:
         class: Phlexible\Bundle\SitemapBundle\Controller\SitemapController
         arguments:
             - "@phlexible_siteroot.siteroot_request_matcher"
-            - "@phlexible_sitemap.sitemap_generator"
+            - "@phlexible_sitemap.sitemap_cache"

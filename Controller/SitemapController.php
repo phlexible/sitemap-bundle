@@ -1,4 +1,10 @@
 <?php
+/**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
+ */
 
 namespace Phlexible\Bundle\SitemapBundle\Controller;
 
@@ -6,7 +12,7 @@ use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCache;
 
 /**
  * Class SitemapController
@@ -21,14 +27,14 @@ class SitemapController
     private $siterootRequestMatcher;
 
     /**
-     * @var SitemapGenerator
+     * @var SitemapCache
      */
-    private $sitemapGenerator;
+    private $sitemapCache;
 
-    public function __construct(SiterootRequestMatcher $siterootRequestMatcher, SitemapGenerator $sitemapGenerator)
+    public function __construct(SiterootRequestMatcher $siterootRequestMatcher, SitemapCache $sitemapCache)
     {
         $this->siterootRequestMatcher = $siterootRequestMatcher;
-        $this->sitemapGenerator = $sitemapGenerator;
+        $this->sitemapCache = $sitemapCache;
     }
 
     /**
@@ -42,10 +48,10 @@ class SitemapController
         $requestMatcher = $this->siterootRequestMatcher;
         $siteRoot = $requestMatcher->matchRequest($request);
 
-        $generator = $this->sitemapGenerator;
+        $generator = $this->sitemapCache;
 
-        $generator->generateSitemap($siteRoot);
+        $sitemap = $generator->getSitemap($siteRoot);
 
-        // TODO: …
+        return new Response($sitemap);
     }
 }

@@ -23,7 +23,7 @@ class SitemapEvents
     /**
      * Fired after URL generation
      */
-    const AFTER_URL_GENERATION = 'phlexible_sitemap.after_url_generation';
+    const URL_GENERATION = 'phlexible_sitemap.url_generation';
 
     /**
      * Fired before URLset generation
@@ -33,5 +33,5 @@ class SitemapEvents
     /**
      * Fired after URLset generation
      */
-    const AFTER_URLSET_GENERATION = 'phlexible_sitemap.after_urlset_generation';
+    const URLSET_GENERATION = 'phlexible_sitemap.urlset_generation';
 }

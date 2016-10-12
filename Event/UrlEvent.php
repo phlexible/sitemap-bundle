@@ -1,10 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jdschulze
- * Date: 12.10.16
- * Time: 12:36
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
+
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
