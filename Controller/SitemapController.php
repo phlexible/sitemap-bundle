@@ -8,17 +8,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 
+/**
+ * Class SitemapController
+ * @package Phlexible\Bundle\SitemapBundle\Controller
+ * @Route(service="phlexible_sitemap.sitemap_controller")
+ */
 class SitemapController
 {
     /**
      * @var SiterootRequestMatcher
      */
-    protected $siterootRequestMatcher;
+    private $siterootRequestMatcher;
 
     /**
      * @var SitemapGenerator
      */
-    protected $sitemapGenerator;
+    private $sitemapGenerator;
 
     public function __construct(SiterootRequestMatcher $siterootRequestMatcher, SitemapGenerator $sitemapGenerator)
     {
