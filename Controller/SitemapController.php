@@ -1,10 +1,13 @@
 <?php
 
-namespace Phlexible\Bundle\SitemapBundle;
+namespace Phlexible\Bundle\SitemapBundle\Controller;
 
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Phlexible\Bundle\SitemapBundle\Sitemap\Generator;
 
 class SitemapController extends Controller
 {
@@ -73,8 +76,29 @@ class SitemapController extends Controller
     public function indexAction(Request $request)
     {
         // TODO
+        $requestMatcher = $this->get('phlexible_siteroot.siteroot_request_matcher');
+        $siteRoot = $requestMatcher->matchRequest($request);
 
+        $generator = $this->get('phlexible_sitemap.generator');
+
+        $generator->generateSitemap($siteRoot);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function indexOldAction()
     {
