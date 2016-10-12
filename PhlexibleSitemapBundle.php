@@ -10,39 +10,14 @@
 namespace Phlexible\Bundle\SitemapBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class PhlexibleSitemapBundle extends Bundle
 {
-    public function initContainer(MWF_Container_ContainerBuilder $container, array $configs)
-    {
-        $processor = new Symfony\Component\Config\Definition\Processor();
-        $configuration = new Makeweb_GoogleSitemaps_Container_Configuration();
-        $processedConfiguration = $processor->processConfiguration(
-            $configuration,
-            $configs
-        );
-
-        $container->setParams(
-            array(
-                ':googlesitemaps.skip_elementtype_ids' => $processedConfiguration['skip_elementtype_ids'],
-            )
-        );
-    }
-
     /**
-     * Callback for routes
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getFrontendRoutes()
+    public function build(ContainerBuilder $container)
     {
-        $data = new Zend_Controller_Router_Route(
-            '/sitemap.xml',
-            array('module' => 'googlesitemaps', 'controller' => 'data', 'action' => 'index')
-        );
-
-        return array(
-            'googlesitemaps_data' => $data,
-        );
     }
 }

@@ -1,9 +1,15 @@
 services:
-    phlexible_sitemap.generator:
-        class: Phlexible\Bundle\SitemapBundle\Sitemap\Generator
+    phlexible_sitemap.sitemap_generator:
+        class: Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator
         arguments:
             - "@phlexible_tree.tree_manager"
             - "@phlexible_tree.content_tree_manager"
             - "@phlexible_country_context.country_collection"
             - "@router"
             - "%phlexible_cms.languages.available%"
+
+    phlexible_sitemap.sitemap_controller:
+        class: Phlexible\Bundle\SitemapBundle\Controller\SitemapController
+        arguments:
+            - "@phlexible_siteroot.siteroot_request_matcher"
+            - "@phlexible_sitemap.sitemap_generator"

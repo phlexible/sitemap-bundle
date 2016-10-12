@@ -21,7 +21,7 @@ use Thepixeldeveloper\Sitemap\Output;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
-class Generator
+class SitemapGenerator
 {
     /**
      * @var TreeManager
@@ -95,7 +95,6 @@ class Generator
             foreach ($languages as $language) {
                 $contentTree->setLanguage($language);
 
-                // FIXME: Too early, we have to check not only language but country as well!
                 if (!$contentTree->isPublished($childNode)) {
                     continue;
                 }
