@@ -17,12 +17,12 @@ use Thepixeldeveloper\Sitemap\Urlset;
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
-class UrlsetEvent extends Event
+class XmlSitemapEvent extends Event
 {
     /**
      * @var Urlset
      */
-    private $urlset;
+    private $xmlSitemap;
 
     /**
      * @var string
@@ -30,12 +30,15 @@ class UrlsetEvent extends Event
     private $siteRootId;
 
     /**
-     * @param Urlset $urlset
+     * @param string $xmlSitemap
      * @param string $siteRootId
      */
-    public function __construct(Urlset $urlset, $siteRootId)
+    public function __construct($xmlSitemap, $siteRootId)
     {
-        $this->urlset = $urlset;
+        if (!is_string($xmlSitemap)) {
+            throw new InvalidArgumentException("XML sitemap must be a string!");
+        }
+        $this->xmlSitemap = $xmlSitemap;
 
         if (!is_string($siteRootId)) {
             throw new InvalidArgumentException("Site root id must be a string!");
@@ -44,11 +47,11 @@ class UrlsetEvent extends Event
     }
 
     /**
-     * @return Urlset
+     * @return string
      */
-    public function getUrlset()
+    public function getXmlSitemap()
     {
-        return $this->urlset;
+        return $this->xmlSitemap;
     }
 
     /**

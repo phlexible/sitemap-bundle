@@ -9,8 +9,11 @@
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
 use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
+use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
+use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
+use Phlexible\Bundle\SitemapBundle\Event\XmlSitemapEvent;
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
@@ -85,7 +88,6 @@ class SitemapGenerator
      */
     public function generateSitemap($siteRootId)
     {
-//        $siteRootId = '1bcaab4d-098e-4737-ac93-53cae9d8388';
         if (!is_string($siteRootId)) {
             throw new InvalidArgumentException("Site root id must be a string! $siteRootId");
         }
@@ -120,12 +122,20 @@ class SitemapGenerator
                 foreach ($countries as $country) {
                     $loc = $this->generateUrl($treeNode, (string) $country, $language);
                     $urlElement = (new Url($loc));
+                    $event = new UrlEvent($urlElement);
+                    $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
                     $urlSet->addUrl($urlElement);
                 }
             }
         }
 
+        $event = new UrlsetEvent($urlSet, $siteRootId);
+        $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
+
         $sitemap = (new Output())->getOutput($urlSet);
+
+        $event = new XmlSitemapEvent($sitemap, $siteRootId);
+        $this->eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, $event);
 
         return $sitemap;
     }
