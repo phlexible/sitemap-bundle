@@ -10,7 +10,7 @@ use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 
 /**
  * Class SitemapController
- * @package Phlexible\Bundle\SitemapBundle\Controller
+ * @package Phlexible\Bundle\SitemapBundle
  * @Route(service="phlexible_sitemap.sitemap_controller")
  */
 class SitemapController
