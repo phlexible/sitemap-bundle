@@ -47,15 +47,11 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     private $siteRootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
 
-    public function setUp()
-    {
-        $this->contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
-        $this->countryCollection = $this->prophesize(CountryCollection::class);
-        $this->router = $this->prophesize(Router::class);
-    }
-
     public function testEventDispatcherShouldDispatchUrlGenerationEvent()
     {
+        $contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
+        $countryCollection = $this->prophesize(CountryCollection::class);
+        $router = $this->prophesize(Router::class);
         $eventDispatcher = $this->prophesize(EventDispatcher::class);
         $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::type(UrlsetEvent::class))->shouldBeCalled();
         $eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, Argument::type(UrlEvent::class))->shouldBeCalled();
@@ -71,50 +67,16 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $tree->setLanguage('de')->shouldBeCalled();
         $tree->isPublished($root)->willReturn(true);
 
-        $this->contentTreeManager->find($this->siteRootId)->willReturn($tree->reveal());
+        $contentTreeManager->find($this->siteRootId)->willReturn($tree->reveal());
 
-        $this->countryCollection->filterLanguage('de')->willReturn(array('de'));
+        $countryCollection->filterLanguage('de')->willReturn(array('de'));
 
         $sitemap = new SitemapGenerator(
-            $this->contentTreeManager->reveal(),
-            $this->countryCollection->reveal(),
-            $this->router->reveal(),
+            $contentTreeManager->reveal(),
+            $countryCollection->reveal(),
+            $router->reveal(),
             $eventDispatcher->reveal(),
             'de'
-        );
-
-        $sitemap->generateSitemap($this->siteRootId);
-    }
-
-    public function testEventDispatcherShouldDispatchUrlSetGenerationEvent()
-    {
-        $eventDispatcher = $this->prophesize(EventDispatcher::class);
-        $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::type(Event::class))->shouldBeCalled();
-
-        $sitemap = new SitemapGenerator(
-            $this->treeManager->reveal(),
-            $this->contentTreeManager->reveal(),
-            $this->countryCollection->reveal(),
-            $this->router->reveal(),
-            $eventDispatcher->reveal(),
-            ['de']
-        );
-
-        $sitemap->generateSitemap($this->siteRootId);
-    }
-
-    public function testEventDispatcherShouldDispatchXmlGenerationEvent()
-    {
-        $eventDispatcher = $this->prophesize(EventDispatcher::class);
-        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::type(Event::class))->shouldBeCalled();
-
-        $sitemap = new SitemapGenerator(
-            $this->treeManager->reveal(),
-            $this->contentTreeManager->reveal(),
-            $this->countryCollection->reveal(),
-            $this->router->reveal(),
-            $eventDispatcher->reveal(),
-            ['de']
         );
 
         $sitemap->generateSitemap($this->siteRootId);
