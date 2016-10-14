@@ -26,11 +26,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateSitemap()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
-
-        $eventDispatcher = $this->prophesize(EventDispatcher::class);
-        $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::type(UrlsetEvent::class))->shouldBeCalled();
-        $eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, Argument::type(UrlEvent::class))->shouldBeCalled();
-        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::type(XmlSitemapEvent::class))->shouldBeCalled();
+        $url = 'http://www.test.de';
 
         $tree = $this->prophesize(DelegatingContentTree::class);
         $root = new ContentTreeNode();
@@ -42,6 +38,20 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $tree->setLanguage('de')->shouldBeCalled();
         $tree->isPublished($root)->willReturn(true);
 
+        $eventDispatcher = $this->prophesize(EventDispatcher::class);
+        $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::that(function(UrlsetEvent $event) use ($siterootId) {
+            $this->assertSame($siterootId, $event->getSiteRootId());
+            return true;
+        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, Argument::that(function(UrlEvent $event) use ($url) {
+            $this->assertSame($url, $event->getUrl()->getLoc());
+            return true;
+        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::that(function(XmlSitemapEvent $event) use ($siterootId) {
+            $this->assertSame($siterootId, $event->getSiteRootId());
+            return true;
+        }))->shouldBeCalled();
+
         $contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
         $contentTreeManager->find($siterootId)->willReturn($tree->reveal());
 
@@ -49,7 +59,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $countryCollection->filterLanguage('de')->willReturn(array('de'));
 
         $router = $this->prophesize(Router::class);
-        $router->generate($root, ['_country' => 'de', '_locale' => 'de'], 0)->shouldBeCalled()->willReturn('http://www.test.de');
+        $router->generate($root, ['_country' => 'de', '_locale' => 'de'], 0)->shouldBeCalled()->willReturn($url);
 
         $sitemap = new SitemapGenerator(
             $contentTreeManager->reveal(),
