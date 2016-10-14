@@ -9,7 +9,9 @@
 namespace Phlexible\Bundle\SitemapBundle\Tests\Sitemap;
 
 use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
+use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
 use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
+use Phlexible\Bundle\SitemapBundle\Event\XmlSitemapEvent;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
@@ -56,6 +58,8 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $eventDispatcher = $this->prophesize(EventDispatcher::class);
         $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::type(UrlsetEvent::class))->shouldBeCalled();
+        $eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, Argument::type(UrlEvent::class))->shouldBeCalled();
+        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::type(XmlSitemapEvent::class))->shouldBeCalled();
 
         $tree = $this->prophesize(DelegatingContentTree::class);
         $root = new ContentTreeNode();
@@ -65,10 +69,11 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $tree->hasChildren($root)->willReturn(false);
         $tree->get(1)->willReturn($root);
         $tree->setLanguage('de')->shouldBeCalled();
-        $tree->isPublished($root)->willReturn(false);
+        $tree->isPublished($root)->willReturn(true);
 
         $this->contentTreeManager->find($this->siteRootId)->willReturn($tree->reveal());
 
+        $this->countryCollection->filterLanguage('de')->willReturn(array('de'));
 
         $sitemap = new SitemapGenerator(
             $this->contentTreeManager->reveal(),
