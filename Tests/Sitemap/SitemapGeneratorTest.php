@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Router;
 
 class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testEventDispatcherShouldDispatchUrlGenerationEvent()
+    public function testGenerateSitemap()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
 
