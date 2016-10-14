@@ -28,11 +28,6 @@ use Thepixeldeveloper\Sitemap\Urlset;
 class SitemapGenerator
 {
     /**
-     * @var TreeManager
-     */
-    private $treeManager;
-
-    /**
      * @var ContentTreeManagerInterface
      */
     private $contentTreeManager;
@@ -59,22 +54,21 @@ class SitemapGenerator
 
     /**
      * Generator constructor.
-     * @param TreeManager $treeManager
+     *
      * @param ContentTreeManagerInterface $contentTreeManager
-     * @param CountryCollection $countryCollection
-     * @param RouterInterface $router
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param string $languagesAvailable
+     * @param CountryCollection           $countryCollection
+     * @param RouterInterface             $router
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param string                      $languagesAvailable
      */
     public function __construct(
-        TreeManager $treeManager,
         ContentTreeManagerInterface $contentTreeManager,
         CountryCollection $countryCollection,
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
         $languagesAvailable
-    ) {
-        $this->treeManager = $treeManager;
+    )
+    {
         $this->contentTreeManager = $contentTreeManager;
         $this->countryCollection = $countryCollection;
         $this->router = $router;
@@ -84,6 +78,7 @@ class SitemapGenerator
 
     /**
      * @param string $siteRootId
+     *
      * @return string
      */
     public function generateSitemap($siteRootId)
@@ -92,16 +87,14 @@ class SitemapGenerator
             throw new InvalidArgumentException("Site root id must be a string! $siteRootId");
         }
 
-        $tree = $this->treeManager->getBySiteRootId($siteRootId);
-        if (!$tree) {
-            throw new InvalidArgumentException("Tree for site root id $siteRootId not found");
-        }
-
         $languages = explode(',', $this->languagesAvailable);
 
         $contentTree = $this->contentTreeManager->find($siteRootId);
+        if (!$contentTree) {
+            throw new InvalidArgumentException("Tree for site root id $siteRootId not found");
+        }
 
-        $iterator = new TreeIterator($tree);
+        $iterator = new TreeIterator($contentTree);
 
         // Create a urlset sitemap
         $urlSet = new Urlset();
