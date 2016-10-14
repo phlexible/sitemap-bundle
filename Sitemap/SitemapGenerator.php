@@ -126,10 +126,10 @@ class SitemapGenerator
             }
         }
 
-        $sitemap = $this->generateSitemapFromUrlSet($urlSet, $siteRootId);
+        $event = new UrlsetEvent($urlSet, $siteRootId);
+        $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
 
-        $event = new XmlSitemapEvent($sitemap, $siteRootId);
-        $this->eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, $event);
+        $sitemap = $this->generateSitemapFromUrlSet($urlSet, $siteRootId);
 
         return $sitemap;
     }
@@ -201,8 +201,8 @@ class SitemapGenerator
     {
         $sitemap = (new Output())->getOutput($urlSet);
 
-        $event = new UrlsetEvent($urlSet, $siteRootId);
-        $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
+        $event = new XmlSitemapEvent($sitemap, $siteRootId);
+        $this->eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, $event);
 
         return $sitemap;
     }
