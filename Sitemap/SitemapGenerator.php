@@ -120,19 +120,13 @@ class SitemapGenerator
 
                 $countries = $this->countryCollection->filterLanguage($language);
                 foreach ($countries as $country) {
-                    $loc = $this->generateUrl($treeNode, (string) $country, $language);
-                    $urlElement = (new Url($loc));
-                    $event = new UrlEvent($urlElement);
-                    $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
-                    $urlSet->addUrl($urlElement);
+                    $urlString = $this->generateUrlStringFromNode($treeNode, (string) $country, $language);
+                    $urlSet->addUrl($this->generateUrlElement($urlString));
                 }
             }
         }
 
-        $event = new UrlsetEvent($urlSet, $siteRootId);
-        $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
-
-        $sitemap = (new Output())->getOutput($urlSet);
+        $sitemap = $this->generateSitemapFromUrlSet($urlSet, $siteRootId);
 
         $event = new XmlSitemapEvent($sitemap, $siteRootId);
         $this->eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, $event);
@@ -147,14 +141,14 @@ class SitemapGenerator
      *
      * @return string
      */
-    private function generateUrl(TreeNodeInterface $treeNode, $country, $language)
+    private function generateUrlStringFromNode(TreeNodeInterface $treeNode, $country, $language)
     {
         $path = $this->router->generate(
             $treeNode,
             ['_country' => (string) $country, '_locale' => $language],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $path = $this->cleanUrl($path);
+        $path = $this->cleanUrlString($path);
 
         return $path;
     }
@@ -164,7 +158,7 @@ class SitemapGenerator
      *
      * @return string
      */
-    private function cleanUrl($url)
+    private function cleanUrlString($url)
     {
         $search = ['/app.php', '/app_dev.php'];
         $cleanUrl = str_replace($search, '', $url);
@@ -191,5 +185,25 @@ class SitemapGenerator
         }
 
         return $langCode;
+    }
+
+    private function generateUrlElement($urlString)
+    {
+        $urlElement = (new Url($urlString));
+
+        $event = new UrlEvent($urlElement);
+        $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
+
+        return $urlElement;
+    }
+
+    private function generateSitemapFromUrlSet($urlSet, $siteRootId)
+    {
+        $sitemap = (new Output())->getOutput($urlSet);
+
+        $event = new UrlsetEvent($urlSet, $siteRootId);
+        $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
+
+        return $sitemap;
     }
 }
