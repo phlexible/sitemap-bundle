@@ -1,9 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jdschulze
- * Date: 14.10.16
- * Time: 09:52
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Tests\Sitemap;
@@ -21,6 +21,10 @@ use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Router;
 
+/**
+ * Class SitemapGeneratorTest
+ * @package Phlexible\Bundle\SitemapBundle\Tests\Sitemap
+ */
 class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateSitemap()
@@ -48,7 +52,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
             return true;
         }))->shouldBeCalled();
         $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::that(function(XmlSitemapEvent $event) use ($siterootId) {
-            $this->assertSame($siterootId, $event->getSiteRootId());
+            $this->assertSame($siterootId, $event->getSiteRoot());
             return true;
         }))->shouldBeCalled();
 

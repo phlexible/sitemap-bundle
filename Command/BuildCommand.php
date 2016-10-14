@@ -27,7 +27,7 @@ class BuildCommand extends ContainerAwareCommand
     {
         $this->setName('sitemap:build')
             ->setDescription('Build and store a new sitemap XML file for the given site root.')
-            ->addArgument('siteRootId', InputArgument::REQUIRED, 'Site root identifier');
+            ->addArgument('siteRootId', InputArgument::OPTIONAL, 'Site root identifier. If no identifier is given, regenerate all sitemaps.');
     }
 
     /**
@@ -36,11 +36,26 @@ class BuildCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemapCache = $this->getContainer()->get('phlexible_sitemap.sitemap_cache');
+        $siteRootManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         if ($siteRootId = $input->getArgument('siteRootId')) {
-            $sitemapCache->getSitemapById($siteRootId, true);
-            $output->writeln("Generated new cache file for $siteRootId");
+            if ($siteRoot = $siteRootManager->find($siteRootId)) {
+                $siteRoots = [$siteRoot];
+            } else {
+                $siteRoots = [];
+                $output->writeln("Invalid Site root identifier!");
+            }
+        } else {
+            $siteRoots = $siteRootManager->findAll();
         }
+
+        foreach ($siteRoots as $thisSiteRoot) {
+            $sitemapCache->getSitemap($thisSiteRoot, true);
+            $thisSiteRootId = $thisSiteRoot->getId();
+            $output->writeln("Generated new cache file for $thisSiteRootId");
+        }
+
+        $output->writeln("Done.");
 
         return $output;
     }

@@ -12,7 +12,7 @@ use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCache;
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCacheInterface;
 
 /**
  * Class SitemapController
@@ -27,11 +27,15 @@ class SitemapController
     private $siterootRequestMatcher;
 
     /**
-     * @var SitemapCache
+     * @var SitemapCacheInterface
      */
     private $sitemapCache;
 
-    public function __construct(SiterootRequestMatcher $siterootRequestMatcher, SitemapCache $sitemapCache)
+    /**
+     * @param SiterootRequestMatcher $siterootRequestMatcher
+     * @param SitemapCacheInterface $sitemapCache
+     */
+    public function __construct(SiterootRequestMatcher $siterootRequestMatcher, SitemapCacheInterface $sitemapCache)
     {
         $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->sitemapCache = $sitemapCache;

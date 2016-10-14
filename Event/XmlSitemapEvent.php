@@ -9,11 +9,12 @@
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Element catch event
+ * XML sitemap event
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
@@ -27,23 +28,20 @@ class XmlSitemapEvent extends Event
     /**
      * @var string
      */
-    private $siteRootId;
+    private $siteRoot;
 
     /**
      * @param string $xmlSitemap
-     * @param string $siteRootId
+     * @param Siteroot $siteRoot
      */
-    public function __construct($xmlSitemap, $siteRootId)
+    public function __construct($xmlSitemap, Siteroot $siteRoot)
     {
         if (!is_string($xmlSitemap)) {
             throw new InvalidArgumentException("XML sitemap must be a string!");
         }
         $this->xmlSitemap = $xmlSitemap;
 
-        if (!is_string($siteRootId)) {
-            throw new InvalidArgumentException("Site root id must be a string!");
-        }
-        $this->siteRootId = $siteRootId;
+        $this->siteRoot = $siteRoot;
     }
 
     /**
@@ -57,8 +55,8 @@ class XmlSitemapEvent extends Event
     /**
      * @return string
      */
-    public function getSiteRootId()
+    public function getSiteRoot()
     {
-        return $this->siteRootId;
+        return $this->siteRoot;
     }
 }

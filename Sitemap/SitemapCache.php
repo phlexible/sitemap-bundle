@@ -9,10 +9,15 @@
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
+use Phlexible\Bundle\SitemapBundle\Exception\IOException;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\Filesystem\Filesystem;
 
-class SitemapCache
+/**
+ * Class SitemapCache
+ * @package Phlexible\Bundle\SitemapBundle\Sitemap
+ */
+class SitemapCache implements SitemapCacheInterface
 {
     /**
      * @var string
@@ -20,16 +25,16 @@ class SitemapCache
     private $cacheDir;
 
     /**
-     * @var SitemapGenerator
+     * @var SitemapGeneratorInterface
      */
     private $sitemapGenerator;
 
     /**
      * SitemapCache constructor.
-     * @param SitemapGenerator $sitemapGenerator
+     * @param SitemapGeneratorInterface $sitemapGenerator
      * @param string $cacheDir
      */
-    public function __construct(SitemapGenerator $sitemapGenerator, $cacheDir)
+    public function __construct(SitemapGeneratorInterface $sitemapGenerator, $cacheDir)
     {
         $this->cacheDir = $cacheDir;
         $this->sitemapGenerator = $sitemapGenerator;
@@ -48,14 +53,6 @@ class SitemapCache
 
         $siteRootId = $siteRoot->getId();
 
-        return $this->getSitemapById($siteRootId, $rebuildCache);
-    }
-
-    public function getSitemapById($siteRootId, $rebuildCache = false)
-    {
-        if (!is_string($siteRootId)) {
-            throw new InvalidArgumentException("Argument 'siteRootId' must be a string!");
-        }
         if (!is_bool($rebuildCache)) {
             throw new InvalidArgumentException("Argument 'refreshCache' must be boolean!");
         }
@@ -69,16 +66,16 @@ class SitemapCache
         }
 
         if ($rebuildCache) {
-            $urlSet = $this->sitemapGenerator->generateSitemap($siteRootId);
+            $urlSet = $this->sitemapGenerator->generateSitemap($siteRoot);
             try {
                 $fileSystem->dumpFile($filename, $urlSet);
             } catch (\Symfony\Component\Filesystem\Exception\IOException $e) {
-                throw new \Phlexible\Bundle\SitemapBundle\Exception\IOException("Could not write file $filename", $e);
+                throw new IOException("Could not write file $filename", $e);
             }
         } else {
             $urlSet = file_get_contents($filename);
             if (false === $urlSet) {
-                throw new \Phlexible\Bundle\SitemapBundle\Exception\IOException("Could not read file $filename");
+                throw new IOException("Could not read file $filename");
             }
         }
 

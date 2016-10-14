@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\Url;
 
 /**
- * Element catch event
+ * Url event
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

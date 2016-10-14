@@ -14,10 +14,10 @@ use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
 use Phlexible\Bundle\SitemapBundle\Event\XmlSitemapEvent;
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -25,7 +25,11 @@ use Thepixeldeveloper\Sitemap\Output;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
-class SitemapGenerator
+/**
+ * Class SitemapGenerator
+ * @package Phlexible\Bundle\SitemapBundle\Sitemap
+ */
+class SitemapGenerator implements SitemapGeneratorInterface
 {
     /**
      * @var ContentTreeManagerInterface
@@ -56,10 +60,10 @@ class SitemapGenerator
      * Generator constructor.
      *
      * @param ContentTreeManagerInterface $contentTreeManager
-     * @param CountryCollection           $countryCollection
-     * @param RouterInterface             $router
-     * @param EventDispatcherInterface    $eventDispatcher
-     * @param string                      $languagesAvailable
+     * @param CountryCollection $countryCollection
+     * @param RouterInterface $router
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param string $languagesAvailable
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
@@ -67,8 +71,7 @@ class SitemapGenerator
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
         $languagesAvailable
-    )
-    {
+    ) {
         $this->contentTreeManager = $contentTreeManager;
         $this->countryCollection = $countryCollection;
         $this->router = $router;
@@ -77,15 +80,12 @@ class SitemapGenerator
     }
 
     /**
-     * @param string $siteRootId
-     *
+     * @param Siteroot $siteRoot
      * @return string
      */
-    public function generateSitemap($siteRootId)
+    public function generateSitemap(Siteroot $siteRoot)
     {
-        if (!is_string($siteRootId)) {
-            throw new InvalidArgumentException("Site root id must be a string! $siteRootId");
-        }
+        $siteRootId = $siteRoot->getId();
 
         $languages = explode(',', $this->languagesAvailable);
 
@@ -105,8 +105,10 @@ class SitemapGenerator
             $treeNode = $contentTree->get($childNode->getId());
 
             foreach ($languages as $language) {
+                /** @noinspection PhpUndefinedMethodInspection */
                 $contentTree->setLanguage($language);
 
+                /** @noinspection PhpParamsInspection */
                 if (!$contentTree->isPublished($childNode)) {
                     continue;
                 }
@@ -159,27 +161,10 @@ class SitemapGenerator
         return $cleanUrl;
     }
 
-    private function generateLangCode($language, $country)
-    {
-        $language = strtolower($language);
-        if ('' === $language) {
-            throw new InvalidArgumentException('Language string must not be empty!');
-        }
-
-        $country = strtolower($country);
-        if ('' === $country) {
-            $country = $language;
-        }
-
-        if ($language === $country) {
-            $langCode = $language;
-        } else {
-            $langCode = "$language-$country";
-        }
-
-        return $langCode;
-    }
-
+    /**
+     * @param $urlString
+     * @return Url
+     */
     private function generateUrlElement($urlString)
     {
         $urlElement = (new Url($urlString));
@@ -190,6 +175,11 @@ class SitemapGenerator
         return $urlElement;
     }
 
+    /**
+     * @param $urlSet
+     * @param $siteRootId
+     * @return string
+     */
     private function generateSitemapFromUrlSet($urlSet, $siteRootId)
     {
         $sitemap = (new Output())->getOutput($urlSet);
