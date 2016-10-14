@@ -81,6 +81,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
     /**
      * @param Siteroot $siteRoot
+     *
      * @return string
      */
     public function generateSitemap(Siteroot $siteRoot)
@@ -121,18 +122,18 @@ class SitemapGenerator implements SitemapGeneratorInterface
             }
         }
 
-        $event = new UrlsetEvent($urlSet, $siteRootId);
+        $event = new UrlsetEvent($urlSet, $siteRoot);
         $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
 
-        $sitemap = $this->generateSitemapFromUrlSet($urlSet, $siteRootId);
+        $sitemap = $this->generateSitemapFromUrlSet($urlSet, $siteRoot);
 
         return $sitemap;
     }
 
     /**
      * @param TreeNodeInterface $treeNode
-     * @param                   $country
-     * @param                   $language
+     * @param string $country
+     * @param string $language
      *
      * @return string
      */
@@ -162,7 +163,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * @param $urlString
+     * @param string $urlString
      * @return Url
      */
     private function generateUrlElement($urlString)
@@ -176,15 +177,15 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * @param $urlSet
-     * @param $siteRootId
+     * @param Urlset $urlSet
+     * @param Siteroot $siteRoot
      * @return string
      */
-    private function generateSitemapFromUrlSet($urlSet, $siteRootId)
+    private function generateSitemapFromUrlSet($urlSet, $siteRoot)
     {
         $sitemap = (new Output())->getOutput($urlSet);
 
-        $event = new XmlSitemapEvent($sitemap, $siteRootId);
+        $event = new XmlSitemapEvent($sitemap, $siteRoot);
         $this->eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, $event);
 
         return $sitemap;

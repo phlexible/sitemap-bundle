@@ -14,6 +14,7 @@ use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
 use Phlexible\Bundle\SitemapBundle\Event\XmlSitemapEvent;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTree;
@@ -42,17 +43,19 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $tree->setLanguage('de')->shouldBeCalled();
         $tree->isPublished($root)->willReturn(true);
 
+        $siteRoot = new Siteroot($siterootId);
+
         $eventDispatcher = $this->prophesize(EventDispatcher::class);
-        $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::that(function(UrlsetEvent $event) use ($siterootId) {
-            $this->assertSame($siterootId, $event->getSiteRootId());
+        $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::that(function(UrlsetEvent $event) use ($siteRoot) {
+            $this->assertSame($siteRoot, $event->getSiteRoot());
             return true;
         }))->shouldBeCalled();
         $eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, Argument::that(function(UrlEvent $event) use ($url) {
             $this->assertSame($url, $event->getUrl()->getLoc());
             return true;
         }))->shouldBeCalled();
-        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::that(function(XmlSitemapEvent $event) use ($siterootId) {
-            $this->assertSame($siterootId, $event->getSiteRoot());
+        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::that(function(XmlSitemapEvent $event) use ($siteRoot) {
+            $this->assertSame($siteRoot, $event->getSiteRoot());
             return true;
         }))->shouldBeCalled();
 
@@ -73,7 +76,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
             'de'
         );
 
-        $result = $sitemap->generateSitemap($siterootId);
+        $result = $sitemap->generateSitemap($siteRoot);
 
         $expected = <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
