@@ -9,7 +9,8 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Class InvalidArgumentException
+ * InvalidArgumentException
+ *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface

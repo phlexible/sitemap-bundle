@@ -15,7 +15,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCacheInterface;
 
 /**
- * Class SitemapController
+ * SitemapController
+ *
  * @Route(service="phlexible_sitemap.sitemap_controller")
  */
 class SitemapController

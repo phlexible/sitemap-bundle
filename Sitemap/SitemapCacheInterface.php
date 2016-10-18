@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Interface SitemapCacheInterface
+ * Retrieve a sitemap file from the sitemap generator, or the file cache
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Build command
+ * Build command: build cached XML sitemap files for a given site root ID, or for all site roots
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

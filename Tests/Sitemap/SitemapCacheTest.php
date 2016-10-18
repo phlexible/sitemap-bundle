@@ -11,12 +11,10 @@ namespace Phlexible\Bundle\SitemapBundle\Tests\Sitemap;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCache;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Prophecy\Argument;
-use Symfony\Component\Filesystem\Filesystem;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * Class SitemapCacheTest
+ * SitemapCacheTest
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

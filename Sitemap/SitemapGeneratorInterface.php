@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Interface SitemapGeneratorInterface
+ * SitemapGenerator: Generate a sitemap for a given site root
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

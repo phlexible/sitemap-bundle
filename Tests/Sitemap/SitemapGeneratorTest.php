@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Router;
 
 /**
- * Class SitemapGeneratorTest
+ * SitemapGeneratorTest
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

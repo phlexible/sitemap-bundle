@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class PhlexibleSitemapBundle
+ * PhlexibleSitemapBundle
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

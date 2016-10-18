@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
 use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
 use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
-use Phlexible\Bundle\SitemapBundle\Event\XmlSitemapEvent;
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
@@ -26,9 +25,7 @@ use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Class SitemapGenerator
- *
- * @author Jens Schulze <jdschulze@brainbits.net>
+ * {@inheritdoc}
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {
@@ -89,7 +86,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generateSitemap(Siteroot $siteRoot)
     {
