@@ -27,7 +27,11 @@ class BuildCommand extends ContainerAwareCommand
     {
         $this->setName('sitemap:build')
             ->setDescription('Build and store a new sitemap XML file for the given site root.')
-            ->addArgument('siteRootId', InputArgument::OPTIONAL, 'Site root identifier. If no identifier is given, regenerate all sitemaps.');
+            ->addArgument(
+                'siteRootId',
+                InputArgument::OPTIONAL,
+                'Site root identifier. If no identifier is given, regenerate all sitemaps.'
+            );
     }
 
     /**
@@ -44,6 +48,7 @@ class BuildCommand extends ContainerAwareCommand
             } else {
                 $siteRoots = [];
                 $output->writeln("<error>Invalid Site root identifier!</error>");
+
                 return 1;
             }
         } else {
