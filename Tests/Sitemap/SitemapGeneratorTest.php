@@ -57,7 +57,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
             )
         )->shouldBeCalled();
         $eventDispatcher->dispatch(
-            SitemapEvents::URL_GENERATION,
+            SitemapEvents::BEFORE_URL_GENERATION,
             Argument::that(
                 function (UrlEvent $event) use ($url) {
                     $this->assertSame($url, $event->getUrl()->getLoc());
@@ -67,10 +67,10 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
             )
         )->shouldBeCalled();
         $eventDispatcher->dispatch(
-            SitemapEvents::XML_GENERATION,
+            SitemapEvents::URL_GENERATION,
             Argument::that(
-                function (XmlSitemapEvent $event) use ($siteRoot) {
-                    $this->assertSame($siteRoot, $event->getSiteRoot());
+                function (UrlEvent $event) use ($url) {
+                    $this->assertSame($url, $event->getUrl()->getLoc());
 
                     return true;
                 }

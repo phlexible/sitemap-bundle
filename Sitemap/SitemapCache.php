@@ -31,14 +31,21 @@ class SitemapCache implements SitemapCacheInterface
     private $sitemapGenerator;
 
     /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
+    /**
      * SitemapCache constructor.
      * @param SitemapGeneratorInterface $sitemapGenerator
+     * @param Filesystem $fileSystem
      * @param string $cacheDir
      */
-    public function __construct(SitemapGeneratorInterface $sitemapGenerator, $cacheDir)
+    public function __construct(SitemapGeneratorInterface $sitemapGenerator, Filesystem $fileSystem, $cacheDir)
     {
         $this->cacheDir = $cacheDir;
         $this->sitemapGenerator = $sitemapGenerator;
+        $this->fileSystem = $fileSystem;
     }
 
     /**
@@ -57,17 +64,16 @@ class SitemapCache implements SitemapCacheInterface
         }
 
         $filename = $this->cacheDir . '/' . $siteRootId;
-        $fileSystem = new Filesystem();
 
         // Force cache file creation if it does not exist yet
-        if (!$fileSystem->exists($filename)) {
+        if (!$this->fileSystem->exists($filename)) {
             $rebuildCache = true;
         }
 
         if ($rebuildCache) {
             $urlSet = $this->sitemapGenerator->generateSitemap($siteRoot);
             try {
-                $fileSystem->dumpFile($filename, $urlSet);
+                $this->fileSystem->dumpFile($filename, $urlSet);
             } catch (\Symfony\Component\Filesystem\Exception\IOException $e) {
                 throw new IOException("Could not write file $filename", $e);
             }
