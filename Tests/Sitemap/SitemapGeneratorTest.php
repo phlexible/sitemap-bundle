@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\SitemapBundle\Tests\Sitemap;
 use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
 use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
 use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
-use Phlexible\Bundle\SitemapBundle\Event\XmlSitemapEvent;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
