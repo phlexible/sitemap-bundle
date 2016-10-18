@@ -1,13 +1,20 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jdschulze
- * Date: 11.10.16
- * Time: 16:42
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
-class IOException extends \Symfony\Component\Filesystem\Exception\IOException implements ExceptionInterface
+use Symfony\Component\Filesystem\Exception\IOException as FilesystemIOException;
+
+/**
+ * Class IOException
+ *
+ * @author Jens Schulze <jdschulze@brainbits.net>
+ */
+class IOException extends FilesystemIOException implements ExceptionInterface
 {
 }

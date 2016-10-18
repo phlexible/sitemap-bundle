@@ -10,7 +10,17 @@ namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
+/**
+ * Interface SitemapCacheInterface
+ *
+ * @author Jens Schulze <jdschulze@brainbits.net>
+ */
 interface SitemapCacheInterface
 {
+    /**
+     * @param Siteroot $siteRoot
+     * @param bool $rebuildCache
+     * @return string
+     */
     public function getSitemap(Siteroot $siteRoot, $rebuildCache = false);
 }

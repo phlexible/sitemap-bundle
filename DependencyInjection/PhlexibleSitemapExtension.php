@@ -27,9 +27,6 @@ class PhlexibleSitemapExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-//        $configuration = $this->getConfiguration($config, $container);
-//        $config = $this->processConfiguration($configuration, $config);
-
         $loader->load('services.yml');
     }
 }

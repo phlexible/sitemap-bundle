@@ -24,7 +24,8 @@ use Symfony\Component\Routing\Router;
 
 /**
  * Class SitemapGeneratorTest
- * @package Phlexible\Bundle\SitemapBundle\Tests\Sitemap
+ *
+ * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,18 +47,36 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $siteRoot = new Siteroot($siterootId);
 
         $eventDispatcher = $this->prophesize(EventDispatcher::class);
-        $eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, Argument::that(function(UrlsetEvent $event) use ($siteRoot) {
-            $this->assertSame($siteRoot, $event->getSiteRoot());
-            return true;
-        }))->shouldBeCalled();
-        $eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, Argument::that(function(UrlEvent $event) use ($url) {
-            $this->assertSame($url, $event->getUrl()->getLoc());
-            return true;
-        }))->shouldBeCalled();
-        $eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, Argument::that(function(XmlSitemapEvent $event) use ($siteRoot) {
-            $this->assertSame($siteRoot, $event->getSiteRoot());
-            return true;
-        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(
+            SitemapEvents::URLSET_GENERATION,
+            Argument::that(
+                function (UrlsetEvent $event) use ($siteRoot) {
+                    $this->assertSame($siteRoot, $event->getSiteRoot());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalled();
+        $eventDispatcher->dispatch(
+            SitemapEvents::URL_GENERATION,
+            Argument::that(
+                function (UrlEvent $event) use ($url) {
+                    $this->assertSame($url, $event->getUrl()->getLoc());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalled();
+        $eventDispatcher->dispatch(
+            SitemapEvents::XML_GENERATION,
+            Argument::that(
+                function (XmlSitemapEvent $event) use ($siteRoot) {
+                    $this->assertSame($siteRoot, $event->getSiteRoot());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalled();
 
         $contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
         $contentTreeManager->find($siterootId)->willReturn($tree->reveal());

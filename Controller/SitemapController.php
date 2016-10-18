@@ -16,7 +16,6 @@ use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCacheInterface;
 
 /**
  * Class SitemapController
- * @package Phlexible\Bundle\SitemapBundle
  * @Route(service="phlexible_sitemap.sitemap_controller")
  */
 class SitemapController
@@ -49,12 +48,11 @@ class SitemapController
      */
     public function indexAction(Request $request)
     {
-        $requestMatcher = $this->siterootRequestMatcher;
-        $siteRoot = $requestMatcher->matchRequest($request);
+        $siteRoot = $this->siterootRequestMatcher->matchRequest($request);
 
-        $generator = $this->sitemapCache;
+        $sitemapCache = $this->sitemapCache;
 
-        $sitemap = $generator->getSitemap($siteRoot);
+        $sitemap = $sitemapCache->getSitemap($siteRoot);
 
         return new Response($sitemap);
     }

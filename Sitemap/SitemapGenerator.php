@@ -27,7 +27,8 @@ use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
  * Class SitemapGenerator
- * @package Phlexible\Bundle\SitemapBundle\Sitemap
+ *
+ * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {
@@ -57,6 +58,11 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $languagesAvailable;
 
     /**
+     * @var array
+     */
+    private $indexScriptNames = [];
+
+    /**
      * Generator constructor.
      *
      * @param ContentTreeManagerInterface $contentTreeManager
@@ -64,25 +70,26 @@ class SitemapGenerator implements SitemapGeneratorInterface
      * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
      * @param string $languagesAvailable
+     * @param array $indexScriptNames
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
         CountryCollection $countryCollection,
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
-        $languagesAvailable
+        $languagesAvailable,
+        array $indexScriptNames = ['/app.php', '/app_dev.php']
     ) {
         $this->contentTreeManager = $contentTreeManager;
         $this->countryCollection = $countryCollection;
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
         $this->languagesAvailable = $languagesAvailable;
+        $this->indexScriptNames = $indexScriptNames;
     }
 
     /**
-     * @param Siteroot $siteRoot
-     *
-     * @return string
+     * @inheritdoc
      */
     public function generateSitemap(Siteroot $siteRoot)
     {
@@ -116,8 +123,10 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
                 $countries = $this->countryCollection->filterLanguage($language);
                 foreach ($countries as $country) {
-                    $urlString = $this->generateUrlStringFromNode($treeNode, (string) $country, $language);
-                    $urlSet->addUrl($this->generateUrlElement($urlString));
+                    $url = $this->generateUrlFromNode($treeNode, (string) $country, $language);
+                    if ($url) {
+                        $urlSet->addUrl($url);
+                    }
                 }
             }
         }
@@ -125,7 +134,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $event = new UrlsetEvent($urlSet, $siteRoot);
         $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
 
-        $sitemap = $this->generateSitemapFromUrlSet($urlSet, $siteRoot);
+        $sitemap = $this->generateSitemapFromUrlSet($urlSet);
 
         return $sitemap;
     }
@@ -135,58 +144,52 @@ class SitemapGenerator implements SitemapGeneratorInterface
      * @param string $country
      * @param string $language
      *
-     * @return string
+     * @return Url
      */
-    private function generateUrlStringFromNode(TreeNodeInterface $treeNode, $country, $language)
+    private function generateUrlFromNode(TreeNodeInterface $treeNode, $country, $language)
     {
-        $path = $this->router->generate(
+        $urlString = $this->router->generate(
             $treeNode,
             ['_country' => (string) $country, '_locale' => $language],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $path = $this->cleanUrlString($path);
+        $urlString = $this->cleanUrlString($urlString);
 
-        return $path;
+        $urlElement = (new Url($urlString));
+
+        $event = new UrlEvent($urlElement, $treeNode, $country, $language);
+        $response = $this->eventDispatcher->dispatch(SitemapEvents::BEFORE_URL_GENERATION, $event);
+
+        if ($response->isPropagationStopped()) {
+            $urlElement = null;
+        } else {
+            $event = new UrlEvent($urlElement, $treeNode, $country, $language);
+            $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
+        }
+
+        return $urlElement;
     }
 
     /**
+     * Remove index scripts from URL paths
      * @param string $url
      *
      * @return string
      */
     private function cleanUrlString($url)
     {
-        $search = ['/app.php', '/app_dev.php'];
-        $cleanUrl = str_replace($search, '', $url);
+        $cleanUrl = str_replace($this->indexScriptNames, '', $url);
 
         return $cleanUrl;
     }
 
     /**
-     * @param string $urlString
-     * @return Url
-     */
-    private function generateUrlElement($urlString)
-    {
-        $urlElement = (new Url($urlString));
-
-        $event = new UrlEvent($urlElement);
-        $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
-
-        return $urlElement;
-    }
-
-    /**
      * @param Urlset $urlSet
-     * @param Siteroot $siteRoot
      * @return string
      */
-    private function generateSitemapFromUrlSet($urlSet, $siteRoot)
+    private function generateSitemapFromUrlSet($urlSet)
     {
         $sitemap = (new Output())->getOutput($urlSet);
-
-        $event = new XmlSitemapEvent($sitemap, $siteRoot);
-        $this->eventDispatcher->dispatch(SitemapEvents::XML_GENERATION, $event);
 
         return $sitemap;
     }

@@ -15,7 +15,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class SitemapCache
- * @package Phlexible\Bundle\SitemapBundle\Sitemap
+ *
+ * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class SitemapCache implements SitemapCacheInterface
 {
@@ -41,9 +42,7 @@ class SitemapCache implements SitemapCacheInterface
     }
 
     /**
-     * @param Siteroot $siteRoot
-     * @param bool $rebuildCache
-     * @return string
+     * @inheritdoc
      */
     public function getSitemap(Siteroot $siteRoot, $rebuildCache = false)
     {
