@@ -158,14 +158,13 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $urlElement = (new Url($urlString));
 
         $event = new UrlEvent($urlElement, $treeNode, $country, $language);
-        $response = $this->eventDispatcher->dispatch(SitemapEvents::BEFORE_URL_GENERATION, $event);
 
-        if ($response->isPropagationStopped()) {
-            $urlElement = null;
-        } else {
-            $event = new UrlEvent($urlElement, $treeNode, $country, $language);
-            $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
+        if ($this->eventDispatcher->dispatch(SitemapEvents::BEFORE_URL_GENERATION, $event)->isPropagationStopped()) {
+            return null;
         }
+
+        $event = new UrlEvent($urlElement, $treeNode, $country, $language);
+        $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
 
         return $urlElement;
     }

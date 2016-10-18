@@ -65,7 +65,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
                     return true;
                 }
             )
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturnArgument(1);
         $eventDispatcher->dispatch(
             SitemapEvents::URL_GENERATION,
             Argument::that(
