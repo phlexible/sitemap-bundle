@@ -46,7 +46,6 @@ class BuildCommand extends ContainerAwareCommand
             if ($siteRoot = $siteRootManager->find($siteRootId)) {
                 $siteRoots = [$siteRoot];
             } else {
-                $siteRoots = [];
                 $output->writeln("<error>Invalid Site root identifier!</error>");
 
                 return 1;
