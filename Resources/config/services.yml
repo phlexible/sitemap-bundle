@@ -1,7 +1,4 @@
 services:
-    phlexible_sitemap.filesystem:
-        class: Symfony\Component\Filesystem\Filesystem
-
     phlexible_sitemap.sitemap_generator:
         class: Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator
         arguments:
@@ -15,7 +12,6 @@ services:
         class: Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCache
         arguments:
             - "@phlexible_sitemap.sitemap_generator"
-            - "@phlexible_sitemap.filesystem"
             - "%kernel.cache_dir%/sitemap"
 
     phlexible_sitemap.sitemap_controller:

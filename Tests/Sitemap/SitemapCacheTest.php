@@ -53,11 +53,7 @@ EOF;
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
         $sitemapGenerator->generateSitemap($siteRoot)->willReturn($this->xmlSitemap);
 
-        $fileSystem = $this->prophesize(Filesystem::class);
-        $fileSystem->exists(Argument::any())->willReturn(true);
-        $fileSystem->dumpFile(Argument::any(), Argument::any())->willReturn(true);
-
-        $sitemapCache = new SitemapCache($sitemapGenerator->reveal(), $fileSystem->reveal(), $this->cacheRoot->url());
+        $sitemapCache = new SitemapCache($sitemapGenerator->reveal(), $this->cacheRoot->url());
         $result = $sitemapCache->getSitemap($siteRoot, true);
 
         $this->assertSame($this->xmlSitemap, $result);
@@ -72,11 +68,7 @@ EOF;
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
         $sitemapGenerator->generateSitemap($siteRoot)->willReturn($this->xmlSitemap);
 
-        $fileSystem = $this->prophesize(Filesystem::class);
-        $fileSystem->exists(Argument::any())->willReturn(true);
-        $fileSystem->dumpFile(Argument::any(), Argument::any())->willReturn(true);
-
-        $sitemapCache = new SitemapCache($sitemapGenerator->reveal(), $fileSystem->reveal(), $this->cacheRoot->url());
+        $sitemapCache = new SitemapCache($sitemapGenerator->reveal(), $this->cacheRoot->url());
         $result = $sitemapCache->getSitemap($siteRoot, false);
 
         $this->assertSame($this->xmlSitemap, $result);
