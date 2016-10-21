@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Event;
@@ -27,17 +30,16 @@ class UrlsetEvent extends Event
     /**
      * @var string
      */
-    private $siteRoot;
+    private $siteroot;
 
     /**
-     * @param Urlset $urlset
-     * @param Siteroot $siteRoot
+     * @param Urlset   $urlset
+     * @param Siteroot $siteroot
      */
-    public function __construct(Urlset $urlset, Siteroot $siteRoot)
+    public function __construct(Urlset $urlset, Siteroot $siteroot)
     {
         $this->urlset = $urlset;
-
-        $this->siteRoot = $siteRoot;
+        $this->siteroot = $siteroot;
     }
 
     /**
@@ -51,8 +53,8 @@ class UrlsetEvent extends Event
     /**
      * @return Siteroot
      */
-    public function getSiteRoot()
+    public function getSiteroot()
     {
-        return $this->siteRoot;
+        return $this->siteroot;
     }
 }

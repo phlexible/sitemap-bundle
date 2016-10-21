@@ -12,10 +12,10 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Exception interface
+ * Write file exception
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
-interface ExceptionInterface
+class WriteFileException extends RuntimeException
 {
 }

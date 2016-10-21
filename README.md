@@ -1,19 +1,17 @@
-PhlexibleElementFinderBundle
-============================
+PhlexibleSitemapBundle
+======================
 
-The PhlexibleElementFinderBundle adds support for a finder field in phlexible.
+The PhlexibleSitemapBundle adds support for a finder field in phlexible.
 
 Installation
 ------------
-
-Installation is a 4 step process:
 
 1. Download PhlexibleSitemapBundle using composer
 2. Enable the Bundle
 3. Import PhlexibleSitemapBundle routing
 4. Clear the symfony cache
 
-### Step 1: Download PhlexibleElementFinderBundle using composer
+### Step 1: Download PhlexibleSitemapBundle using composer
 
 Add PhlexibleSitemapBundle by running the command:
 

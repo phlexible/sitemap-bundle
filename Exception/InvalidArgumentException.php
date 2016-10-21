@@ -1,15 +1,18 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * InvalidArgumentException
+ * Invalid argument exception
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

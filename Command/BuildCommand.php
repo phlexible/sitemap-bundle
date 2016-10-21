@@ -1,25 +1,55 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
+use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Build command: build cached XML sitemap files for a given site root ID, or for all site roots
+ * Build cached XML sitemap files for a given site root ID, or for all site roots.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
-class BuildCommand extends ContainerAwareCommand
+class BuildCommand extends Command
 {
+    /**
+     * @var SitemapGeneratorInterface
+     */
+    private $sitemapGenerator;
+
+    /**
+     * @var SiterootManagerInterface
+     */
+    private $siterootManager;
+
+    /**
+     * BuildCommand constructor.
+     *
+     * @param SitemapGeneratorInterface $sitemapGenerator
+     * @param SiterootManagerInterface  $siterootManager
+     */
+    public function __construct(SitemapGeneratorInterface $sitemapGenerator, SiterootManagerInterface $siterootManager)
+    {
+        $this->sitemapGenerator = $sitemapGenerator;
+        $this->siterootManager = $siterootManager;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -28,7 +58,7 @@ class BuildCommand extends ContainerAwareCommand
         $this->setName('sitemap:build')
             ->setDescription('Build and store a new sitemap XML file for the given site root.')
             ->addArgument(
-                'siteRootId',
+                'siterootId',
                 InputArgument::OPTIONAL,
                 'Site root identifier. If no identifier is given, regenerate all sitemaps.'
             );
@@ -39,29 +69,26 @@ class BuildCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $sitemapCache = $this->getContainer()->get('phlexible_sitemap.sitemap_cache');
-        $siteRootManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $style = new SymfonyStyle($input, $output);
 
-        if ($siteRootId = $input->getArgument('siteRootId')) {
-            if ($siteRoot = $siteRootManager->find($siteRootId)) {
-                $siteRoots = [$siteRoot];
-            } else {
-                $output->writeln("<error>Invalid Site root identifier!</error>");
+        if ($siterootId = $input->getArgument('siterootId')) {
+            $siteroot = $this->siterootManager->find($siterootId);
+            if (!$siteroot) {
+                $style->error("Invalid siteroot identifier $siterootId.");
 
                 return 1;
             }
+            $siteroots = [$siteroot];
         } else {
-            $siteRoots = $siteRootManager->findAll();
+            $siteroots = $this->siterootManager->findAll();
         }
 
-        foreach ($siteRoots as $thisSiteRoot) {
-            $sitemapCache->getSitemap($thisSiteRoot, true);
-            $thisSiteRootId = $thisSiteRoot->getId();
-            $output->writeln("Generated new cache file for $thisSiteRootId");
+        foreach ($siteroots as $siteroot) {
+            $this->sitemapGenerator->generateSitemap($siteroot);
+
+            $style->success("Generated new cache file for {$siteroot->getId()}");
         }
 
-        $output->writeln("Done.");
-
-        return $output;
+        return 0;
     }
 }

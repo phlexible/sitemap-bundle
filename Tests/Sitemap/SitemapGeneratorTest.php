@@ -1,16 +1,18 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Tests\Sitemap;
 
-use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
-use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
 use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
+use Phlexible\Bundle\SitemapBundle\Sitemap\NodeUrlsetGeneratorInterface;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
@@ -19,12 +21,15 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTree;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Routing\Router;
+use Thepixeldeveloper\Sitemap\Url;
+use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * SitemapGeneratorTest
+ * Sitemap generator test
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
+ *
+ * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator
  */
 class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,6 +37,8 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
         $url = 'http://www.test.de';
+
+        $siteRoot = new Siteroot($siterootId);
 
         $tree = $this->prophesize(DelegatingContentTree::class);
         $root = new ContentTreeNode();
@@ -43,34 +50,12 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $tree->setLanguage('de')->shouldBeCalled();
         $tree->isPublished($root)->willReturn(true);
 
-        $siteRoot = new Siteroot($siterootId);
-
         $eventDispatcher = $this->prophesize(EventDispatcher::class);
         $eventDispatcher->dispatch(
             SitemapEvents::URLSET_GENERATION,
             Argument::that(
                 function (UrlsetEvent $event) use ($siteRoot) {
-                    $this->assertSame($siteRoot, $event->getSiteRoot());
-
-                    return true;
-                }
-            )
-        )->shouldBeCalled();
-        $eventDispatcher->dispatch(
-            SitemapEvents::BEFORE_URL_GENERATION,
-            Argument::that(
-                function (UrlEvent $event) use ($url) {
-                    $this->assertSame($url, $event->getUrl()->getLoc());
-
-                    return true;
-                }
-            )
-        )->shouldBeCalled()->willReturnArgument(1);
-        $eventDispatcher->dispatch(
-            SitemapEvents::URL_GENERATION,
-            Argument::that(
-                function (UrlEvent $event) use ($url) {
-                    $this->assertSame($url, $event->getUrl()->getLoc());
+                    $this->assertSame($siteRoot, $event->getSiteroot());
 
                     return true;
                 }
@@ -80,16 +65,15 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
         $contentTreeManager->find($siterootId)->willReturn($tree->reveal());
 
-        $countryCollection = $this->prophesize(CountryCollection::class);
-        $countryCollection->filterLanguage('de')->willReturn(array('de'));
+        $urlset = new Urlset();
+        $urlset->addUrl(new Url($url));
 
-        $router = $this->prophesize(Router::class);
-        $router->generate($root, ['_country' => 'de', '_locale' => 'de'], 0)->shouldBeCalled()->willReturn($url);
+        $nodeUrlsetGenerator = $this->prophesize(NodeUrlsetGeneratorInterface::class);
+        $nodeUrlsetGenerator->generateUrlset($root, 'de')->willReturn($urlset);
 
         $sitemap = new SitemapGenerator(
             $contentTreeManager->reveal(),
-            $countryCollection->reveal(),
-            $router->reveal(),
+            $nodeUrlsetGenerator->reveal(),
             $eventDispatcher->reveal(),
             'de'
         );
@@ -103,6 +87,85 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         <loc>http://www.test.de</loc>
     </url>
 </urlset>
+EOF;
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @expectedException \Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException
+     */
+    public function testGenerateSitemapWithInvalidTreeThrowsException()
+    {
+        $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+
+        $siteRoot = new Siteroot($siterootId);
+
+        $contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
+        $contentTreeManager->find($siterootId)->willReturn(null);
+
+        $nodeUrlsetGenerator = $this->prophesize(NodeUrlsetGeneratorInterface::class);
+        $nodeUrlsetGenerator->generateUrlset()->shouldNotBeCalled();
+
+        $eventDispatcher = $this->prophesize(EventDispatcher::class);
+
+        $sitemap = new SitemapGenerator(
+            $contentTreeManager->reveal(),
+            $nodeUrlsetGenerator->reveal(),
+            $eventDispatcher->reveal(),
+            'de'
+        );
+
+        $sitemap->generateSitemap($siteRoot);
+    }
+
+    public function testGenerateSitemapWithUnpublishedNode()
+    {
+        $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $url = 'http://www.test.de';
+
+        $siteRoot = new Siteroot($siterootId);
+
+        $tree = $this->prophesize(DelegatingContentTree::class);
+        $root = new ContentTreeNode();
+        $root->setId(1);
+        $root->setTree($tree->reveal());
+        $tree->getRoot()->willReturn($root);
+        $tree->hasChildren($root)->willReturn(false);
+        $tree->get(1)->willReturn($root);
+        $tree->setLanguage('de')->shouldBeCalled();
+        $tree->isPublished($root)->willReturn(false);
+
+        $eventDispatcher = $this->prophesize(EventDispatcher::class);
+        $eventDispatcher->dispatch(
+            SitemapEvents::URLSET_GENERATION,
+            Argument::that(
+                function (UrlsetEvent $event) use ($siteRoot) {
+                    $this->assertSame($siteRoot, $event->getSiteroot());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalled();
+
+        $contentTreeManager = $this->prophesize(ContentTreeManagerInterface::class);
+        $contentTreeManager->find($siterootId)->willReturn($tree->reveal());
+
+        $nodeUrlsetGenerator = $this->prophesize(NodeUrlsetGeneratorInterface::class);
+        $nodeUrlsetGenerator->generateUrlset()->shouldNotBeCalled();
+
+        $sitemap = new SitemapGenerator(
+            $contentTreeManager->reveal(),
+            $nodeUrlsetGenerator->reveal(),
+            $eventDispatcher->reveal(),
+            'de'
+        );
+
+        $result = $sitemap->generateSitemap($siteRoot);
+
+        $expected = <<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>
 EOF;
 
         $this->assertSame($expected, $result);

@@ -1,15 +1,16 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
-use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
-use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
 use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
@@ -18,14 +19,13 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Thepixeldeveloper\Sitemap\Output;
-use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * {@inheritdoc}
+ * Generates a sitemap for a given site root
+ *
+ * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {
@@ -35,14 +35,9 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $contentTreeManager;
 
     /**
-     * @var CountryCollection
+     * @var NodeUrlsetGeneratorInterface
      */
-    private $countryCollection;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private $nodeUrlSetGenerator;
 
     /**
      * @var EventDispatcherInterface
@@ -50,143 +45,94 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $eventDispatcher;
 
     /**
-     * @var string
-     */
-    private $languagesAvailable;
-
-    /**
      * @var array
      */
-    private $indexScriptNames = [];
+    private $availableLanguages;
 
     /**
-     * Generator constructor.
-     *
-     * @param ContentTreeManagerInterface $contentTreeManager
-     * @param CountryCollection $countryCollection
-     * @param RouterInterface $router
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param string $languagesAvailable
-     * @param array $indexScriptNames
+     * @param ContentTreeManagerInterface  $contentTreeManager
+     * @param NodeUrlsetGeneratorInterface $nodeUrlsetGenerator
+     * @param EventDispatcherInterface     $eventDispatcher
+     * @param string                       $availableLanguages
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
-        CountryCollection $countryCollection,
-        RouterInterface $router,
+        NodeUrlsetGeneratorInterface $nodeUrlsetGenerator,
         EventDispatcherInterface $eventDispatcher,
-        $languagesAvailable,
-        array $indexScriptNames = ['/app.php', '/app_dev.php']
-    ) {
+        $availableLanguages
+    )
+    {
         $this->contentTreeManager = $contentTreeManager;
-        $this->countryCollection = $countryCollection;
-        $this->router = $router;
+        $this->nodeUrlSetGenerator = $nodeUrlsetGenerator;
         $this->eventDispatcher = $eventDispatcher;
-        $this->languagesAvailable = $languagesAvailable;
-        $this->indexScriptNames = $indexScriptNames;
+        $this->availableLanguages = explode(',', $availableLanguages);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generateSitemap(Siteroot $siteRoot)
+    public function generateSitemap(Siteroot $siteroot, $force = false)
     {
-        $siteRootId = $siteRoot->getId();
-
-        $languages = explode(',', $this->languagesAvailable);
-
-        $contentTree = $this->contentTreeManager->find($siteRootId);
+        $contentTree = $this->contentTreeManager->find($siteroot->getId());
         if (!$contentTree) {
-            throw new InvalidArgumentException("Tree for site root id $siteRootId not found");
+            throw new InvalidArgumentException("Tree for site root {$siteroot->getId()} not found");
         }
 
-        $iterator = new TreeIterator($contentTree);
-
-        // Create a urlset sitemap
         $urlSet = new Urlset();
+
+        $iterator = new TreeIterator($contentTree);
 
         $rii = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $childNode) {
             /** @var TreeNodeInterface $childNode */
             $treeNode = $contentTree->get($childNode->getId());
 
-            foreach ($languages as $language) {
+            foreach ($this->availableLanguages as $language) {
                 /** @noinspection PhpUndefinedMethodInspection */
                 $contentTree->setLanguage($language);
 
                 /** @noinspection PhpParamsInspection */
-                if (!$contentTree->isPublished($childNode)) {
+                if (!$contentTree->isPublished($treeNode)) {
                     continue;
                 }
 
-                $countries = $this->countryCollection->filterLanguage($language);
-                foreach ($countries as $country) {
-                    $url = $this->generateUrlFromNode($treeNode, (string) $country, $language);
-                    if ($url) {
-                        $urlSet->addUrl($url);
-                    }
-                }
+                $nodeUrlSet = $this->nodeUrlSetGenerator->generateUrlset($treeNode, $language);
+
+                $urlSet = $this->mergeUrlSet($urlSet, $nodeUrlSet);
             }
         }
 
-        $event = new UrlsetEvent($urlSet, $siteRoot);
+        $event = new UrlsetEvent($urlSet, $siteroot);
         $this->eventDispatcher->dispatch(SitemapEvents::URLSET_GENERATION, $event);
 
-        $sitemap = $this->generateSitemapFromUrlSet($urlSet);
-
-        return $sitemap;
+        return $this->generateSitemapFromUrlSet($urlSet);
     }
 
     /**
-     * @param TreeNodeInterface $treeNode
-     * @param string $country
-     * @param string $language
+     * @param Urlset[] $sourceUrlSets
      *
-     * @return Url
+     * @return Urlset
      */
-    private function generateUrlFromNode(TreeNodeInterface $treeNode, $country, $language)
+    private function mergeUrlSet(Urlset ...$sourceUrlSets)
     {
-        $urlString = $this->router->generate(
-            $treeNode,
-            ['_country' => (string) $country, '_locale' => $language],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $urlString = $this->cleanUrlString($urlString);
+        $urlSet = new Urlset();
 
-        $urlElement = (new Url($urlString));
-
-        $event = new UrlEvent($urlElement, $treeNode, $country, $language);
-
-        if ($this->eventDispatcher->dispatch(SitemapEvents::BEFORE_URL_GENERATION, $event)->isPropagationStopped()) {
-            return null;
+        foreach ($sourceUrlSets as $sourceUrlSet) {
+            foreach ($sourceUrlSet->getUrls() as $url) {
+                $urlSet->addUrl($url);
+            }
         }
 
-        $event = new UrlEvent($urlElement, $treeNode, $country, $language);
-        $this->eventDispatcher->dispatch(SitemapEvents::URL_GENERATION, $event);
-
-        return $urlElement;
-    }
-
-    /**
-     * Remove index scripts from URL paths
-     * @param string $url
-     *
-     * @return string
-     */
-    private function cleanUrlString($url)
-    {
-        $cleanUrl = str_replace($this->indexScriptNames, '', $url);
-
-        return $cleanUrl;
+        return $urlSet;
     }
 
     /**
      * @param Urlset $urlSet
+     *
      * @return string
      */
     private function generateSitemapFromUrlSet($urlSet)
     {
-        $sitemap = (new Output())->getOutput($urlSet);
-
-        return $sitemap;
+        return (new Output())->getOutput($urlSet);
     }
 }

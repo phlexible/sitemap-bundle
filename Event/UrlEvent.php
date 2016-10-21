@@ -1,14 +1,16 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
-use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\Url;
@@ -31,35 +33,20 @@ class UrlEvent extends Event
     private $treeNode;
 
     /**
-     * @var string
+     * @var array
      */
-    private $country;
+    private $parameters;
 
     /**
-     * @var string
-     */
-    private $language;
-
-    /**
-     * @param Url $url
+     * @param Url               $url
      * @param TreeNodeInterface $treeNode
-     * @param string $country
-     * @param string $language
+     * @param array             $parameters
      */
-    public function __construct(Url $url, TreeNodeInterface $treeNode, $country, $language)
+    public function __construct(Url $url, TreeNodeInterface $treeNode, array $parameters)
     {
         $this->url = $url;
         $this->treeNode = $treeNode;
-        if (is_string($country)) {
-            $this->country = $country;
-        } else {
-            throw new InvalidArgumentException('Country must be a string!');
-        }
-        if (is_string($language)) {
-            $this->language = $language;
-        } else {
-            throw new InvalidArgumentException('Language must be a string!');
-        }
+        $this->parameters = $parameters;
     }
 
     /**
@@ -79,18 +66,10 @@ class UrlEvent extends Event
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getCountry()
+    public function getParameters()
     {
-        return $this->country;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
+        return $this->parameters;
     }
 }

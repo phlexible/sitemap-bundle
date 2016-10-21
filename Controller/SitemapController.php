@@ -1,60 +1,60 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\Controller;
 
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapCacheInterface;
 
 /**
- * SitemapController
+ * Sitemap controller
  *
  * @Route(service="phlexible_sitemap.sitemap_controller")
  */
 class SitemapController
 {
     /**
+     * @var SitemapGeneratorInterface
+     */
+    private $sitemapGenerator;
+
+    /**
      * @var SiterootRequestMatcher
      */
     private $siterootRequestMatcher;
 
     /**
-     * @var SitemapCacheInterface
+     * @param SitemapGeneratorInterface $sitemapGenerator
+     * @param SiterootRequestMatcher    $siterootRequestMatcher
      */
-    private $sitemapCache;
-
-    /**
-     * @param SiterootRequestMatcher $siterootRequestMatcher
-     * @param SitemapCacheInterface $sitemapCache
-     */
-    public function __construct(SiterootRequestMatcher $siterootRequestMatcher, SitemapCacheInterface $sitemapCache)
+    public function __construct(SitemapGeneratorInterface $sitemapGenerator, SiterootRequestMatcher $siterootRequestMatcher)
     {
+        $this->sitemapGenerator = $sitemapGenerator;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
-        $this->sitemapCache = $sitemapCache;
     }
 
     /**
      * @param Request $request
      *
      * @return Response
-     * @Route("/sitemap.xml", name="sitemap_index")
+     * @Route("/sitemap.xml", name="sitemap_2index")
      */
     public function indexAction(Request $request)
     {
-        $siteRoot = $this->siterootRequestMatcher->matchRequest($request);
+        $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+        $sitemap = $this->sitemapGenerator->generateSitemap($siteroot);
 
-        $sitemapCache = $this->sitemapCache;
-
-        $sitemap = $sitemapCache->getSitemap($siteRoot);
-
-        return new Response($sitemap);
+        return new Response($sitemap, 200, array('Content-type' => 'text/xml; charset=UTF-8'));
     }
 }

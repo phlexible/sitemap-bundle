@@ -1,7 +1,7 @@
 {
     "name": "phlexible/sitemap-bundle",
     "description": "phlexible sitemap bundle",
-    "license": "proprietary",
+    "license": "MIT",
 	"type": "symfony-bundle",
 	"keywords": ["sitemap", "xml"],
     "autoload": {
@@ -12,15 +12,20 @@
     "require": {
         "php": ">=5.6.0",
         "thepixeldeveloper/sitemap": "^4.4.2",
-        "phlexible/country-context-bundle": "~1.0",
         "phlexible/siteroot-bundle": "~1.0",
         "phlexible/tree-bundle": "~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.0",
-        "symfony/config": "~2.8",
-        "symfony/dependency-injection": "~2.8",
-        "symfony/http-kernel": "~2.8"
+        "phpunit/phpunit": "^5.6",
+        "symfony/config": "^2.8",
+        "symfony/console": "^2.8",
+        "symfony/dependency-injection": "^2.8",
+        "symfony/http-kernel": "^2.8",
+        "doctrine/collections": "^1.3",
+        "mikey179/vfsStream": "^1.6",
+        "phlexible/country-context-bundle": "~1.0",
+        "matthiasnoback/symfony-config-test": "^2.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^1.0"
     },
     "repositories": [
         {
@@ -30,7 +35,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1-dev"
         }
     },
     "minimum-stability": "dev",

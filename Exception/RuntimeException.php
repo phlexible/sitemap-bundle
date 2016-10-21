@@ -12,10 +12,10 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Exception interface
+ * Runtime exception
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
-interface ExceptionInterface
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 }

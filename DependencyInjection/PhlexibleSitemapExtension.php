@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible sitemap package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SitemapBundle\DependencyInjection;
@@ -26,7 +29,14 @@ class PhlexibleSitemapExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-
         $loader->load('services.yml');
+
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $container->setParameter('phlexible_sitemap.cache_dir', '%kernel.cache_dir%/sitemap');
+
+        $container->setAlias('phlexible_sitemap.node_urlset_generator', $config['node_urlset_generator']);
+        $container->setAlias('phlexible_sitemap.node_url_generator', $config['node_url_generator']);
     }
 }
