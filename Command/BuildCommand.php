@@ -84,7 +84,7 @@ class BuildCommand extends Command
         }
 
         foreach ($siteroots as $siteroot) {
-            $this->sitemapGenerator->generateSitemap($siteroot);
+            $this->sitemapGenerator->generateSitemap($siteroot, true);
 
             $style->success("Generated new cache file for {$siteroot->getId()}");
         }
