@@ -40,6 +40,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 array()
             ),
             array(
+                'cache_dir' => '%kernel.cache_dir%/sitemap',
                 'node_urlset_generator' => 'phlexible_sitemap.language_node_urlset_generator',
                 'node_url_generator' => 'phlexible_sitemap.simple_node_url_generator',
             )
@@ -51,11 +52,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertProcessedConfigurationEquals(
             array(
                 array(
+                    'cache_dir' => 'cache',
                     'node_urlset_generator' => 'urlset',
                     'node_url_generator' => 'url',
                 )
             ),
             array(
+                'cache_dir' => 'cache',
                 'node_urlset_generator' => 'urlset',
                 'node_url_generator' => 'url',
             )

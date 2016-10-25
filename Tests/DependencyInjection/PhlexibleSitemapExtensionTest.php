@@ -37,6 +37,7 @@ class PhlexibleSitemapExtensionTest extends AbstractExtensionTestCase
     {
         $this->load();
 
+        $this->assertContainerBuilderHasParameter('phlexible_sitemap.cache_dir', '%kernel.cache_dir%/sitemap');
         $this->assertContainerBuilderHasAlias('phlexible_sitemap.node_urlset_generator', 'phlexible_sitemap.language_node_urlset_generator');
         $this->assertContainerBuilderHasAlias('phlexible_sitemap.node_url_generator', 'phlexible_sitemap.simple_node_url_generator');
     }
@@ -44,10 +45,12 @@ class PhlexibleSitemapExtensionTest extends AbstractExtensionTestCase
     public function testContainerWithCustomerConfiguration()
     {
         $this->load(array(
+            'cache_dir' => 'cache',
             'node_urlset_generator' => 'urlset',
             'node_url_generator' => 'url',
         ));
 
+        $this->assertContainerBuilderHasParameter('phlexible_sitemap.cache_dir', 'cache');
         $this->assertContainerBuilderHasAlias('phlexible_sitemap.node_urlset_generator', 'urlset');
         $this->assertContainerBuilderHasAlias('phlexible_sitemap.node_url_generator', 'url');
     }

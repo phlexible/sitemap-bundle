@@ -1,18 +1,21 @@
 services:
     phlexible_sitemap.simple_node_url_generator:
         class: Phlexible\Bundle\SitemapBundle\Sitemap\NodeUrlGenerator
+        public: false
         arguments:
             - "@router"
             - "@event_dispatcher"
 
     phlexible_sitemap.country_node_urlset_generator:
         class: Phlexible\Bundle\SitemapBundle\Sitemap\CountryNodeUrlsetGenerator
+        public: false
         arguments:
             - "@phlexible_country_context.country_collection"
             - "@phlexible_sitemap.node_url_generator"
 
     phlexible_sitemap.language_node_urlset_generator:
         class: Phlexible\Bundle\SitemapBundle\Sitemap\LanguageNodeUrlsetGenerator
+        public: false
         arguments:
             - "@phlexible_sitemap.node_url_generator"
 

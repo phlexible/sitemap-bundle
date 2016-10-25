@@ -34,7 +34,7 @@ class PhlexibleSitemapExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('phlexible_sitemap.cache_dir', '%kernel.cache_dir%/sitemap');
+        $container->setParameter('phlexible_sitemap.cache_dir', $config['cache_dir']);
 
         $container->setAlias('phlexible_sitemap.node_urlset_generator', $config['node_urlset_generator']);
         $container->setAlias('phlexible_sitemap.node_url_generator', $config['node_url_generator']);
