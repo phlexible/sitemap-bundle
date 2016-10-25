@@ -1,0 +1,9 @@
+preset: symfony
+
+enabled:
+  - ordered_imports
+  - strict_comparison
+
+disabled:
+  - function_declaration
+  - simplified_null_return
