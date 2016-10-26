@@ -1,6 +1,6 @@
 services:
     phlexible_sitemap.simple_node_url_generator:
-        class: Phlexible\Bundle\SitemapBundle\Sitemap\NodeUrlGenerator
+        class: Phlexible\Bundle\SitemapBundle\Sitemap\SimpleNodeUrlGenerator
         public: false
         arguments:
             - "@router"
