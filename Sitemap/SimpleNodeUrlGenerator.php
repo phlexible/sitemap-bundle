@@ -68,7 +68,7 @@ class SimpleNodeUrlGenerator implements NodeUrlGeneratorInterface
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $this->cleanUrlString($urlString);
+        $urlString = $this->cleanUrlString($urlString);
 
         $url = new Url($urlString);
 
