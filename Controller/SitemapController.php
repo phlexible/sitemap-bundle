@@ -53,7 +53,7 @@ class SitemapController
     public function indexAction(Request $request)
     {
         $siteroot = $this->siterootRequestMatcher->matchRequest($request);
-        $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, true);
+        $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, true); // TODO seond param only for testing!!
 
         return new Response($sitemap, 200, array('Content-type' => 'text/xml; charset=UTF-8'));
     }
