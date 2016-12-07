@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sitemap')->end()
+                ->scalarNode('sitemap_generator')->defaultValue('phlexible_sitemap.caching_generator')->end()
                 ->scalarNode('node_urlset_generator')->defaultValue('phlexible_sitemap.language_node_urlset_generator')->end()
                 ->scalarNode('node_url_generator')->defaultValue('phlexible_sitemap.simple_node_url_generator')->end()
             ->end();
