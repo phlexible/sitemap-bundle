@@ -11,12 +11,15 @@
 
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
+use Phlexible\Bundle\CountryContextBundle\Mapping\Country;
+use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
+use Phlexible\Bundle\CountryContextBundle\Mapping\Language;
 use Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent;
 use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thepixeldeveloper\Sitemap\Output;
@@ -25,7 +28,7 @@ use Thepixeldeveloper\Sitemap\Urlset;
 /**
  * Generates a sitemap with hreflang annotation
  *
- * @author Matthias Harmuth <mharmuth@brainbits.net>
+ * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class HreflangSitemapGenerator implements SitemapGeneratorInterface
 {
@@ -47,25 +50,37 @@ class HreflangSitemapGenerator implements SitemapGeneratorInterface
     /**
      * @var array
      */
-    private $availableLanguages;
+    private $availableLanguages = [];
 
     /**
-     * @param ContentTreeManagerInterface  $contentTreeManager
+     * @param ContentTreeManagerInterface $contentTreeManager
      * @param NodeUrlsetGeneratorInterface $nodeUrlsetGenerator
-     * @param EventDispatcherInterface     $eventDispatcher
-     * @param string                       $availableLanguages
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param CountryCollection $countryCollection
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
         NodeUrlsetGeneratorInterface $nodeUrlsetGenerator,
         EventDispatcherInterface $eventDispatcher,
-        $availableLanguages
-    )
-    {
-        $this->contentTreeManager = $contentTreeManager;
+        CountryCollection $countryCollection
+    ) {
+        $this->contentTreeManager  = $contentTreeManager;
         $this->nodeUrlSetGenerator = $nodeUrlsetGenerator;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->availableLanguages = explode(',', $availableLanguages);
+        $this->eventDispatcher     = $eventDispatcher;
+
+        /** @var Country $country */
+        foreach ($countryCollection as $country) {
+            $languages = $country->getLanguages();
+            /** @var Language $language */
+            foreach ($languages as $language) {
+                if ($language->isExposed()) {
+                    $langcode = $language->getIdentifier();
+                    if (!in_array($langcode, $this->availableLanguages)) {
+                        $this->availableLanguages[] = $langcode;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -84,7 +99,7 @@ class HreflangSitemapGenerator implements SitemapGeneratorInterface
 
         $rii = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $childNode) {
-            /** @var TreeNodeInterface $childNode */
+            /** @var ContentTreeNode $treeNode */
             $treeNode = $contentTree->get($childNode->getId());
 
             foreach ($this->availableLanguages as $language) {

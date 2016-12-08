@@ -16,7 +16,7 @@ use Phlexible\Bundle\SitemapBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thepixeldeveloper\Sitemap\Output;
@@ -50,22 +50,21 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $availableLanguages;
 
     /**
-     * @param ContentTreeManagerInterface  $contentTreeManager
+     * @param ContentTreeManagerInterface $contentTreeManager
      * @param NodeUrlsetGeneratorInterface $nodeUrlsetGenerator
-     * @param EventDispatcherInterface     $eventDispatcher
-     * @param string                       $availableLanguages
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param string $availableLanguages
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
         NodeUrlsetGeneratorInterface $nodeUrlsetGenerator,
         EventDispatcherInterface $eventDispatcher,
         $availableLanguages
-    )
-    {
-        $this->contentTreeManager = $contentTreeManager;
+    ) {
+        $this->contentTreeManager  = $contentTreeManager;
         $this->nodeUrlSetGenerator = $nodeUrlsetGenerator;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->availableLanguages = explode(',', $availableLanguages);
+        $this->eventDispatcher     = $eventDispatcher;
+        $this->availableLanguages  = explode(',', $availableLanguages);
     }
 
     /**
@@ -84,7 +83,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
         $rii = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $childNode) {
-            /** @var TreeNodeInterface $childNode */
+            /** @var ContentTreeNode $treeNode */
             $treeNode = $contentTree->get($childNode->getId());
 
             foreach ($this->availableLanguages as $language) {

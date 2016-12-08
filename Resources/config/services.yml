@@ -20,7 +20,7 @@ services:
             - "@phlexible_sitemap.node_url_generator"
 
     phlexible_sitemap.hreflang_urlset_generator:
-            class: Phlexible\Bundle\SitemapBundle\Sitemap\HreflangUrlsetGenerator
+            class: Phlexible\Bundle\SitemapBundle\Sitemap\HreflangNodeUrlsetGenerator
             public: false
             arguments:
                 - "@phlexible_country_context.country_collection"
@@ -32,14 +32,7 @@ services:
             - "@phlexible_tree.content_tree_manager"
             - "@phlexible_sitemap.node_urlset_generator"
             - "@event_dispatcher"
-            - "@phlexible_country_context.country_collection"
             - "%phlexible_cms.languages.available%"
-
-    phlexible_sitemap.caching_sitemap_generator:
-        class: Phlexible\Bundle\SitemapBundle\Sitemap\CachingSitemapGenerator
-        arguments:
-            - "@phlexible_sitemap.sitemap_generator"
-            - "%phlexible_sitemap.cache_dir%"
 
     phlexible_sitemap.hreflang_sitemap_generator:
             class: Phlexible\Bundle\SitemapBundle\Sitemap\HreflangSitemapGenerator
@@ -47,7 +40,13 @@ services:
                 - "@phlexible_tree.content_tree_manager"
                 - "@phlexible_sitemap.hreflang_urlset_generator"
                 - "@event_dispatcher"
-                - "%phlexible_cms.languages.available%"
+                - "@phlexible_country_context.country_collection"
+
+    phlexible_sitemap.caching_sitemap_generator:
+        class: Phlexible\Bundle\SitemapBundle\Sitemap\CachingSitemapGenerator
+        arguments:
+            - "@phlexible_sitemap.hreflang_sitemap_generator"
+            - "%phlexible_sitemap.cache_dir%"
 
     # commands
     phlexible_sitemap.build_command:

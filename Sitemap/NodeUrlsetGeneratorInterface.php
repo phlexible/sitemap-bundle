@@ -23,9 +23,9 @@ interface NodeUrlsetGeneratorInterface
 {
     /**
      * @param ContentTreeNode $treeNode
-     * @param string          $language
+     * @param string $language
      *
-     * @return UrlSet|null
+     * @return Urlset|null
      */
     public function generateUrlset(ContentTreeNode $treeNode, $language);
 }

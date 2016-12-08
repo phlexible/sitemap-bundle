@@ -22,7 +22,7 @@ use Thepixeldeveloper\Sitemap\Urlset;
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
-class HreflangUrlsetGenerator implements NodeUrlsetGeneratorInterface
+class HreflangNodeUrlsetGenerator implements NodeUrlsetGeneratorInterface
 {
     /**
      * @var CountryCollection
@@ -35,13 +35,13 @@ class HreflangUrlsetGenerator implements NodeUrlsetGeneratorInterface
     private $nodeUrlGenerator;
 
     /**
-     * @param CountryCollection         $countryCollection
+     * @param CountryCollection $countryCollection
      * @param NodeUrlGeneratorInterface $nodeUrlGenerator
      */
     public function __construct(CountryCollection $countryCollection, NodeUrlGeneratorInterface $nodeUrlGenerator)
     {
         $this->countryCollection = $countryCollection;
-        $this->nodeUrlGenerator = $nodeUrlGenerator;
+        $this->nodeUrlGenerator  = $nodeUrlGenerator;
     }
 
     /**
@@ -59,7 +59,7 @@ class HreflangUrlsetGenerator implements NodeUrlsetGeneratorInterface
             $countryUrl = $this->generateUrlFromNode($treeNode, $language, (string) $country);
 
             if ($countryUrl) {
-                $hrefLang = new Link($language, $countryUrl);
+                $hrefLang = new Link("{$language}-{$country}", $countryUrl->getLoc());
                 $url->addSubElement($hrefLang);
             }
         }
@@ -71,8 +71,8 @@ class HreflangUrlsetGenerator implements NodeUrlsetGeneratorInterface
 
     /**
      * @param ContentTreeNode $treeNode
-     * @param string          $language
-     * @param string          $country
+     * @param string $language
+     * @param string $country
      *
      * @return Url
      */
@@ -88,5 +88,4 @@ class HreflangUrlsetGenerator implements NodeUrlsetGeneratorInterface
 
         return $url;
     }
-
 }
