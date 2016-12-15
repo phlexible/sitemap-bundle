@@ -22,9 +22,16 @@ interface SitemapGeneratorInterface
 {
     /**
      * @param Siteroot $siteroot
-     * @param bool     $force
-     *
+     * @param string $language
+     * @param bool $force
      * @return string
      */
-    public function generateSitemap(Siteroot $siteroot, $force = false);
+    public function generateSitemap(Siteroot $siteroot, $language, $force = false);
+
+    /**
+     * @param Siteroot $siteroot
+     * @param bool $force
+     * @return string
+     */
+    public function generateSitemapIndex(Siteroot $siteroot, $force = false);
 }

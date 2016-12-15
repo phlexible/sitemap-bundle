@@ -49,7 +49,30 @@ class CachingSitemapGenerator implements SitemapGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generateSitemap(Siteroot $siteroot, $force = false)
+    public function generateSitemap(Siteroot $siteroot, $language, $force = false)
+    {
+        $siteRootId = $siteroot->getId();
+
+        $filename = $this->cacheDir . $siteRootId . '-' . $language . '.xml';
+        $fileSystem = new Filesystem();
+
+        if ($force || !$fileSystem->exists($filename)) {
+            $urlSet = $this->sitemapGenerator->generateSitemap($siteroot, $language);
+            try {
+                $fileSystem->dumpFile($filename, $urlSet);
+            } catch (IOException $e) {
+                throw new WriteFileException("Could not write file $filename", 0, $e);
+            }
+        } else {
+            if (!is_readable($filename) || false === $urlSet = file_get_contents($filename)) {
+                throw new ReadFileException("Could not read file $filename");
+            }
+        }
+
+        return $urlSet;
+    }
+
+    public function generateSitemapIndex(Siteroot $siteroot, $force = false)
     {
         $siteRootId = $siteroot->getId();
 
@@ -57,7 +80,7 @@ class CachingSitemapGenerator implements SitemapGeneratorInterface
         $fileSystem = new Filesystem();
 
         if ($force || !$fileSystem->exists($filename)) {
-            $urlSet = $this->sitemapGenerator->generateSitemap($siteroot);
+            $urlSet = $this->sitemapGenerator->generateSitemapIndex($siteroot);
             try {
                 $fileSystem->dumpFile($filename, $urlSet);
             } catch (IOException $e) {

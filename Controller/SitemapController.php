@@ -46,14 +46,19 @@ class SitemapController
 
     /**
      * @param Request $request
-     *
      * @return Response
+     *
      * @Route("/sitemap.xml", name="sitemap_2index")
      */
     public function indexAction(Request $request)
     {
         $siteroot = $this->siterootRequestMatcher->matchRequest($request);
-        $sitemap = $this->sitemapGenerator->generateSitemap($siteroot); // TODO set second param to TRUE only for testing!!
+
+        if (null !== $request->query->get('language')) {
+            $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, $request->query->get('language'), true);
+        } else {
+            $sitemap = $this->sitemapGenerator->generateSitemapIndex($siteroot, true);
+        }
 
         return new Response($sitemap, 200, array('Content-type' => 'text/xml; charset=UTF-8'));
     }
