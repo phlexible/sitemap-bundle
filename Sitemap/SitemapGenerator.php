@@ -122,6 +122,9 @@ class SitemapGenerator implements SitemapGeneratorInterface
         return $this->generateSitemapFromUrlSet($urlSet);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function generateSitemapIndex(Siteroot $siteroot, $force = false)
     {
         $sitemapIndex = new SitemapIndex();

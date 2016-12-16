@@ -27,12 +27,12 @@ class CountryNodeUrlsetGenerator implements NodeUrlsetGeneratorInterface
     /**
      * @var CountryCollection
      */
-    private $countryCollection;
+    protected $countryCollection;
 
     /**
      * @var NodeUrlGeneratorInterface
      */
-    private $nodeUrlGenerator;
+    protected $nodeUrlGenerator;
 
     /**
      * @param CountryCollection         $countryCollection
@@ -69,7 +69,7 @@ class CountryNodeUrlsetGenerator implements NodeUrlsetGeneratorInterface
      *
      * @return Url
      */
-    private function generateUrlFromNode(ContentTreeNode $treeNode, $country, $language)
+    protected function generateUrlFromNode(ContentTreeNode $treeNode, $country, $language)
     {
         $url = $this->nodeUrlGenerator->generateUrl(
             $treeNode,

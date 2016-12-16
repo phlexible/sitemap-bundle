@@ -54,8 +54,9 @@ class SitemapController
     {
         $siteroot = $this->siterootRequestMatcher->matchRequest($request);
 
-        if (null !== $request->query->get('language')) {
-            $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, $request->query->get('language'), true);
+        // TODO remove last param from method calls below
+        if ($language = $request->query->get('language')) {
+            $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, $language, true);
         } else {
             $sitemap = $this->sitemapGenerator->generateSitemapIndex($siteroot, true);
         }

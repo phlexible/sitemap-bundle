@@ -57,7 +57,7 @@ class BuildCommand extends Command
     protected function configure()
     {
         $this->setName('sitemap:build')
-            ->setDescription('Build and store a new sitemap XML file for the given site root.')
+            ->setDescription('Build and store a new sitemap index XML file for the given site root.')
             ->addArgument(
                 'siterootId',
                 InputArgument::OPTIONAL,
@@ -91,7 +91,11 @@ class BuildCommand extends Command
         }
 
         foreach ($siteroots as $siteroot) {
-            $this->sitemapGenerator->generateSitemap($siteroot, null, true);
+            if ($language = $input->getOption('language')) {
+                $this->sitemapGenerator->generateSitemap($siteroot, $language, true);
+            } else {
+                $this->sitemapGenerator->generateSitemapIndex($siteroot, true);
+            }
 
             $style->success("Generated new cache file for {$siteroot->getId()}");
         }
