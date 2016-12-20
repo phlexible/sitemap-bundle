@@ -42,7 +42,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Generated new cache file for foo', $output);
+        $this->assertContains('Generated new sitemap index cache file for foo', $output);
     }
 
     public function testBuildForSpecificSiteroot()
@@ -61,7 +61,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Generated new cache file for foo', $output);
+        $this->assertContains('Generated new sitemap index cache file for foo', $output);
     }
 
     public function testBuildForInvalidSiteroot()
@@ -81,5 +81,30 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $status = $commandTester->getStatusCode();
         $this->assertSame(1, $status);
         $this->assertContains('Invalid siteroot identifier bar', $output);
+    }
+
+    public function testBuildForGivenLanguage()
+    {
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
+
+        $siteroot = new Siteroot('foo');
+        $language = 'de';
+
+        $siterootManager = $this->prophesize(SiterootManagerInterface::class);
+        $siterootManager->find('foo')->willReturn($siteroot);
+
+        $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            array(
+                'siterootId' => 'foo',
+                '--language' => 'de'
+            )
+        );
+
+        // the output of the command in the console
+        $output = $commandTester->getDisplay();
+        $this->assertContains("Generated new sitemap cache file for language '$language'", $output);
     }
 }

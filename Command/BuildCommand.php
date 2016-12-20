@@ -93,11 +93,12 @@ class BuildCommand extends Command
         foreach ($siteroots as $siteroot) {
             if ($language = $input->getOption('language')) {
                 $this->sitemapGenerator->generateSitemap($siteroot, $language, true);
+                $style->success("Generated new sitemap cache file for language '$language'");
             } else {
                 $this->sitemapGenerator->generateSitemapIndex($siteroot, true);
+                $style->success("Generated new sitemap index cache file for {$siteroot->getId()}");
             }
 
-            $style->success("Generated new cache file for {$siteroot->getId()}");
         }
 
         return 0;

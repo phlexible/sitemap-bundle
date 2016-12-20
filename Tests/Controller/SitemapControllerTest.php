@@ -27,13 +27,41 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class SitemapControllerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testIndexAction()
+    public function testGenerateSitemap()
     {
         $request = new Request();
+        $request->query->set('language', 'de');
+
         $siteroot = new Siteroot('foo');
 
         $generator = $this->prophesize(SitemapGeneratorInterface::class);
-        $generator->generateSitemap($siteroot)->willReturn('bar');
+
+        $generator->generateSitemap(
+            $siteroot,
+            $request->query->get('language')
+        )->willReturn('bar');
+
+        $siterootRequestMatcher = $this->prophesize(SiterootRequestMatcher::class);
+        $siterootRequestMatcher->matchRequest($request)->willReturn($siteroot);
+
+        $controller = new SitemapController($generator->reveal(), $siterootRequestMatcher->reveal());
+
+        $result = $controller->indexAction($request);
+
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('bar', $result->getContent());
+        $this->assertSame('text/xml; charset=UTF-8', $result->headers->get('Content-type'));
+    }
+
+    public function testGenerateSitemapIndex()
+    {
+        $request = new Request();
+
+        $siteroot = new Siteroot('foo');
+
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
+        $generator->generateSitemapIndex($siteroot)->willReturn('bar');
 
         $siterootRequestMatcher = $this->prophesize(SiterootRequestMatcher::class);
         $siterootRequestMatcher->matchRequest($request)->willReturn($siteroot);

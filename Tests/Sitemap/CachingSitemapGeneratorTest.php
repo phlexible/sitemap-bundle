@@ -41,9 +41,10 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
 
         $siteRoot = new Siteroot($siterootId);
+        $language = 'de';
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
         $sitemapCache->generateSitemap($siteRoot, true);
@@ -55,15 +56,16 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testForceGenerateSitemapDoesnNotReturnCachedSitemap()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
-        vfsStream::newFile("$siterootId.xml")
+        vfsStream::newFile("$siterootId-$language.xml")
             ->withContent('cached')
             ->at($this->cacheRoot);
 
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
         $sitemapCache->generateSitemap($siteRoot, true);
@@ -75,15 +77,16 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateSitemapReturnCachedSitemap()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
-        vfsStream::newFile("$siterootId.xml")
+        vfsStream::newFile("$siterootId-$language.xml")
             ->withContent('cached')
             ->at($this->cacheRoot);
 
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->shouldNotBeCalled();
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->shouldNotBeCalled();
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
         $result = $sitemapCache->generateSitemap($siteRoot, false);
@@ -97,6 +100,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testWriteThrowsExceptionOnInsufficiantPermissions()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
         $dir = vfsStream::newDirectory('invalid', 000)
             ->at($this->cacheRoot);
@@ -104,7 +108,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
         $sitemapCache->generateSitemap($siteRoot, true);
@@ -116,6 +120,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testReadThrowsExceptionOnInsufficiantPermissions()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
         $dir = vfsStream::newDirectory('invalid', 000)
             ->at($this->cacheRoot);
@@ -127,7 +132,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
         $sitemapCache->generateSitemap($siteRoot, false);
