@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
 use Phlexible\Bundle\CountryContextBundle\Mapping\CountryCollection;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
@@ -27,12 +26,12 @@ class CountryNodeUrlsetGenerator implements NodeUrlsetGeneratorInterface
     /**
      * @var CountryCollection
      */
-    protected $countryCollection;
+    private $countryCollection;
 
     /**
      * @var NodeUrlGeneratorInterface
      */
-    protected $nodeUrlGenerator;
+    private $nodeUrlGenerator;
 
     /**
      * @param CountryCollection         $countryCollection
@@ -69,7 +68,7 @@ class CountryNodeUrlsetGenerator implements NodeUrlsetGeneratorInterface
      *
      * @return Url
      */
-    protected function generateUrlFromNode(ContentTreeNode $treeNode, $country, $language)
+    private function generateUrlFromNode(ContentTreeNode $treeNode, $country, $language)
     {
         $url = $this->nodeUrlGenerator->generateUrl(
             $treeNode,

@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
