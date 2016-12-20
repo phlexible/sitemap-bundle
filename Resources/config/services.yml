@@ -19,13 +19,6 @@ services:
         arguments:
             - "@phlexible_sitemap.node_url_generator"
 
-    phlexible_sitemap.hreflang_urlset_generator:
-            class: Phlexible\Bundle\SitemapBundle\Sitemap\HreflangNodeUrlsetGenerator
-            public: false
-            arguments:
-                - "@phlexible_country_context.country_collection"
-                - "@phlexible_sitemap.node_url_generator"
-
     phlexible_sitemap.sitemap_generator:
         class: Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator
         arguments:

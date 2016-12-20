@@ -54,11 +54,10 @@ class SitemapController
     {
         $siteroot = $this->siterootRequestMatcher->matchRequest($request);
 
-        // TODO remove last param from method calls below
         if ($language = $request->query->get('language')) {
-            $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, $language, true);
+            $sitemap = $this->sitemapGenerator->generateSitemap($siteroot, $language);
         } else {
-            $sitemap = $this->sitemapGenerator->generateSitemapIndex($siteroot, true);
+            $sitemap = $this->sitemapGenerator->generateSitemapIndex($siteroot);
         }
 
         return new Response($sitemap, 200, array('Content-type' => 'text/xml; charset=UTF-8'));
