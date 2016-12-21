@@ -34,7 +34,7 @@ class SitemapEvents
     const URLSET_GENERATION = 'phlexible_sitemap.urlset_generation';
 
     /**
-     * Fire after SitemapIndex index gemeration
+     * Fired after SitemapIndex index gemeration
      */
     const SITEMAPINDEX_GENERATION = 'phlexible_sitemap.sitemapindex_generation';
 }
