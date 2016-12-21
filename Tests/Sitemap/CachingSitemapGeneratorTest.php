@@ -47,10 +47,10 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
-        $sitemapCache->generateSitemap($siteRoot, true);
+        $sitemapCache->generateSitemap($siteRoot, $language, true);
 
-        $this->assertFileExists($this->cacheRoot->getChild("$siterootId.xml")->url());
-        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId.xml")->getContent());
+        $this->assertFileExists($this->cacheRoot->getChild("$siterootId-$language.xml")->url());
+        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId-$language.xml")->getContent());
     }
 
     public function testForceGenerateSitemapDoesnNotReturnCachedSitemap()
@@ -68,10 +68,10 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
-        $sitemapCache->generateSitemap($siteRoot, true);
+        $sitemapCache->generateSitemap($siteRoot, $language, true);
 
-        $this->assertFileExists($this->cacheRoot->getChild("$siterootId.xml")->url());
-        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId.xml")->getContent());
+        $this->assertFileExists($this->cacheRoot->getChild("$siterootId-$language.xml")->url());
+        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId-$language.xml")->getContent());
     }
 
     public function testGenerateSitemapReturnCachedSitemap()
@@ -89,7 +89,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $sitemapGenerator->generateSitemap($siteRoot, $language)->shouldNotBeCalled();
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
-        $result = $sitemapCache->generateSitemap($siteRoot, false);
+        $result = $sitemapCache->generateSitemap($siteRoot, $language, false);
 
         $this->assertSame('cached', $result);
     }
@@ -111,7 +111,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
-        $sitemapCache->generateSitemap($siteRoot, true);
+        $sitemapCache->generateSitemap($siteRoot, $language, true);
     }
 
     /**
@@ -125,7 +125,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $dir = vfsStream::newDirectory('invalid', 000)
             ->at($this->cacheRoot);
 
-        vfsStream::newFile("$siterootId.xml", 000)
+        vfsStream::newFile("$siterootId-$language.xml", 000)
             ->withContent('cached')
             ->at($dir);
 
@@ -135,7 +135,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
-        $sitemapCache->generateSitemap($siteRoot, false);
+        $sitemapCache->generateSitemap($siteRoot, $language, false);
     }
 
 }

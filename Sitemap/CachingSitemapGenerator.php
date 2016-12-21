@@ -72,6 +72,9 @@ class CachingSitemapGenerator implements SitemapGeneratorInterface
         return $urlSet;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function generateSitemapIndex(Siteroot $siteroot, $force = false)
     {
         $siteRootId = $siteroot->getId();
