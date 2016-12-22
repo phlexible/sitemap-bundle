@@ -33,8 +33,8 @@ class SitemapIndexEvent extends Event
     private $siteroot;
 
     /**
-     * @param SitemapIndex $urlset
-     * @param Siteroot $siteroot
+     * @param SitemapIndex $sitemapIndex
+     * @param Siteroot     $siteroot
      */
     public function __construct(SitemapIndex $sitemapIndex, Siteroot $siteroot)
     {
