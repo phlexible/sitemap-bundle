@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\SitemapBundle\Command;
 
-use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGeneratorInterface;
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,7 +28,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BuildCommand extends Command
 {
     /**
-     * @var SitemapIndexGeneratorInterface
+     * @var SitemapGeneratorInterface
      */
     private $sitemapGenerator;
 
@@ -40,10 +40,10 @@ class BuildCommand extends Command
     /**
      * BuildCommand constructor.
      *
-     * @param SitemapIndexGeneratorInterface $sitemapGenerator
-     * @param SiterootManagerInterface       $siterootManager
+     * @param SitemapGeneratorInterface $sitemapGenerator
+     * @param SiterootManagerInterface  $siterootManager
      */
-    public function __construct(SitemapIndexGeneratorInterface $sitemapGenerator, SiterootManagerInterface $siterootManager)
+    public function __construct(SitemapGeneratorInterface $sitemapGenerator, SiterootManagerInterface $siterootManager)
     {
         $this->sitemapGenerator = $sitemapGenerator;
         $this->siterootManager = $siterootManager;
