@@ -41,52 +41,55 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
 
         $siteRoot = new Siteroot($siterootId);
+        $language = 'de';
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
-        $sitemapCache->generateSitemap($siteRoot, true);
+        $sitemapCache->generateSitemap($siteRoot, $language, true);
 
-        $this->assertFileExists($this->cacheRoot->getChild("$siterootId.xml")->url());
-        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId.xml")->getContent());
+        $this->assertFileExists($this->cacheRoot->getChild("$siterootId-$language.xml")->url());
+        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId-$language.xml")->getContent());
     }
 
     public function testForceGenerateSitemapDoesnNotReturnCachedSitemap()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
-        vfsStream::newFile("$siterootId.xml")
+        vfsStream::newFile("$siterootId-$language.xml")
             ->withContent('cached')
             ->at($this->cacheRoot);
 
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
-        $sitemapCache->generateSitemap($siteRoot, true);
+        $sitemapCache->generateSitemap($siteRoot, $language, true);
 
-        $this->assertFileExists($this->cacheRoot->getChild("$siterootId.xml")->url());
-        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId.xml")->getContent());
+        $this->assertFileExists($this->cacheRoot->getChild("$siterootId-$language.xml")->url());
+        $this->assertEquals('generated', $this->cacheRoot->getChild("$siterootId-$language.xml")->getContent());
     }
 
     public function testGenerateSitemapReturnCachedSitemap()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
-        vfsStream::newFile("$siterootId.xml")
+        vfsStream::newFile("$siterootId-$language.xml")
             ->withContent('cached')
             ->at($this->cacheRoot);
 
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->shouldNotBeCalled();
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->shouldNotBeCalled();
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $this->cacheRoot->url());
-        $result = $sitemapCache->generateSitemap($siteRoot, false);
+        $result = $sitemapCache->generateSitemap($siteRoot, $language, false);
 
         $this->assertSame('cached', $result);
     }
@@ -97,6 +100,7 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testWriteThrowsExceptionOnInsufficiantPermissions()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
         $dir = vfsStream::newDirectory('invalid', 000)
             ->at($this->cacheRoot);
@@ -104,10 +108,10 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
-        $sitemapCache->generateSitemap($siteRoot, true);
+        $sitemapCache->generateSitemap($siteRoot, $language, true);
     }
 
     /**
@@ -116,21 +120,22 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testReadThrowsExceptionOnInsufficiantPermissions()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
         $dir = vfsStream::newDirectory('invalid', 000)
             ->at($this->cacheRoot);
 
-        vfsStream::newFile("$siterootId.xml", 000)
+        vfsStream::newFile("$siterootId-$language.xml", 000)
             ->withContent('cached')
             ->at($dir);
 
         $siteRoot = new Siteroot($siterootId);
 
         $sitemapGenerator = $this->prophesize(SitemapGenerator::class);
-        $sitemapGenerator->generateSitemap($siteRoot)->willReturn('generated');
+        $sitemapGenerator->generateSitemap($siteRoot, $language)->willReturn('generated');
 
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
-        $sitemapCache->generateSitemap($siteRoot, false);
+        $sitemapCache->generateSitemap($siteRoot, $language, false);
     }
 
 }

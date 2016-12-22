@@ -50,8 +50,7 @@ class SimpleNodeUrlGenerator implements NodeUrlGeneratorInterface
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
         array $indexScriptNames = ['/app.php', '/app_dev.php']
-    )
-    {
+    ) {
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
         $this->indexScriptNames = $indexScriptNames;

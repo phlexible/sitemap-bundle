@@ -18,16 +18,16 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Generates a cached sitemap, using a nested sitemap generator.
+ * Generates a cached sitemap index, using a nested sitemap index generator.
  *
- * @author Jens Schulze <jdschulze@brainbits.net>
+ * @author Matthias Harmuth <mharmuth@brainbits.net>
  */
-class CachingSitemapGenerator implements SitemapGeneratorInterface
+class CachingSitemapIndexGenerator implements SitemapIndexGeneratorInterface
 {
     /**
-     * @var SitemapGeneratorInterface
+     * @var SitemapIndexGeneratorInterface
      */
-    private $sitemapGenerator;
+    private $sitemapIndexGenerator;
 
     /**
      * @var string
@@ -37,27 +37,27 @@ class CachingSitemapGenerator implements SitemapGeneratorInterface
     /**
      * SitemapCache constructor.
      *
-     * @param SitemapGeneratorInterface $sitemapGenerator
-     * @param string                    $cacheDir
+     * @param SitemapIndexGeneratorInterface $sitemapIndexGenerator
+     * @param string                         $cacheDir
      */
-    public function __construct(SitemapGeneratorInterface $sitemapGenerator, $cacheDir)
+    public function __construct(SitemapIndexGeneratorInterface $sitemapIndexGenerator, $cacheDir)
     {
-        $this->sitemapGenerator = $sitemapGenerator;
+        $this->sitemapIndexGenerator = $sitemapIndexGenerator;
         $this->cacheDir = rtrim($cacheDir, '/') . '/';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generateSitemap(Siteroot $siteroot, $language, $force = false)
+    public function generateSitemapIndex(Siteroot $siteroot, $force = false)
     {
         $siteRootId = $siteroot->getId();
 
-        $filename = $this->cacheDir . $siteRootId . '-' . $language . '.xml';
+        $filename = $this->cacheDir . $siteRootId . '.xml';
         $fileSystem = new Filesystem();
 
         if ($force || !$fileSystem->exists($filename)) {
-            $urlSet = $this->sitemapGenerator->generateSitemap($siteroot, $language);
+            $urlSet = $this->sitemapIndexGenerator->generateSitemapIndex($siteroot);
             try {
                 $fileSystem->dumpFile($filename, $urlSet);
             } catch (IOException $e) {

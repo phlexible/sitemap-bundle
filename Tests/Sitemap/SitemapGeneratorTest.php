@@ -21,6 +21,7 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTree;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Routing\Router;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
@@ -37,6 +38,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
         $url = 'http://www.test.de';
+        $language = 'de';
 
         $siteRoot = new Siteroot($siterootId);
 
@@ -75,10 +77,10 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
             $contentTreeManager->reveal(),
             $nodeUrlsetGenerator->reveal(),
             $eventDispatcher->reveal(),
-            'de'
+            $language
         );
 
-        $result = $sitemap->generateSitemap($siteRoot);
+        $result = $sitemap->generateSitemap($siteRoot, $language);
 
         $expected = <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -98,6 +100,7 @@ EOF;
     public function testGenerateSitemapWithInvalidTreeThrowsException()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
+        $language = 'de';
 
         $siteRoot = new Siteroot($siterootId);
 
@@ -113,16 +116,16 @@ EOF;
             $contentTreeManager->reveal(),
             $nodeUrlsetGenerator->reveal(),
             $eventDispatcher->reveal(),
-            'de'
+            $language
         );
 
-        $sitemap->generateSitemap($siteRoot);
+        $sitemap->generateSitemap($siteRoot, $language);
     }
 
     public function testGenerateSitemapWithUnpublishedNode()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
-        $url = 'http://www.test.de';
+        $language = 'de';
 
         $siteRoot = new Siteroot($siterootId);
 
@@ -158,10 +161,10 @@ EOF;
             $contentTreeManager->reveal(),
             $nodeUrlsetGenerator->reveal(),
             $eventDispatcher->reveal(),
-            'de'
+            $language
         );
 
-        $result = $sitemap->generateSitemap($siteRoot);
+        $result = $sitemap->generateSitemap($siteRoot, $language);
 
         $expected = <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
