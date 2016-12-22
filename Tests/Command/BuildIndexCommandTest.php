@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Tests\Command;
 
 use Phlexible\Bundle\SitemapBundle\Command\BuildCommand;
+use Phlexible\Bundle\SitemapBundle\Command\BuildIndexCommand;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
@@ -20,11 +21,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Build command test
  *
- * @author Stephan Wentz <sw@brainbits.net>
+ * @author Matthias Harmuth <mharmuth@brainbits.net>
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Command\BuildCommand
  */
-class BuildCommandTest extends \PHPUnit_Framework_TestCase
+class BuildIndexCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuildForAllSiteroots()
     {
@@ -35,14 +36,14 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $siterootManager = $this->prophesize(SiterootManagerInterface::class);
         $siterootManager->findAll()->willReturn(array($siteroot));
 
-        $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
+        $command = new BuildIndexCommand($generator->reveal(), $siterootManager->reveal());
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(array());
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Generated new sitemap cache file for foo', $output);
+        $this->assertContains('Generated new sitemap index cache file for foo', $output);
     }
 
     public function testBuildForSpecificSiteroot()
@@ -54,14 +55,14 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $siterootManager = $this->prophesize(SiterootManagerInterface::class);
         $siterootManager->find('foo')->willReturn($siteroot);
 
-        $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
+        $command = new BuildIndexCommand($generator->reveal(), $siterootManager->reveal());
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(array('siterootId' => 'foo'));
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Generated new sitemap cache file for foo', $output);
+        $this->assertContains('Generated new sitemap index cache file for foo', $output);
     }
 
     public function testBuildForInvalidSiteroot()
@@ -71,7 +72,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $siterootManager = $this->prophesize(SiterootManagerInterface::class);
         $siterootManager->find('bar')->willReturn(null);
 
-        $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
+        $command = new BuildIndexCommand($generator->reveal(), $siterootManager->reveal());
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(array('siterootId' => 'bar'));
@@ -81,30 +82,5 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $status = $commandTester->getStatusCode();
         $this->assertSame(1, $status);
         $this->assertContains('Invalid siteroot identifier bar', $output);
-    }
-
-    public function testBuildForGivenLanguage()
-    {
-        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
-
-        $siteroot = new Siteroot('foo');
-        $language = 'de';
-
-        $siterootManager = $this->prophesize(SiterootManagerInterface::class);
-        $siterootManager->find('foo')->willReturn($siteroot);
-
-        $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array(
-                'siterootId' => 'foo',
-                '--language' => 'de'
-            )
-        );
-
-        // the output of the command in the console
-        $output = $commandTester->getDisplay();
-        $this->assertContains("Generated new sitemap cache file for language '$language'", $output);
     }
 }

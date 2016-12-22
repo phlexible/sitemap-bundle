@@ -13,6 +13,7 @@ namespace Phlexible\Bundle\SitemapBundle\Tests\Controller;
 
 use Phlexible\Bundle\SitemapBundle\Controller\SitemapController;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +45,10 @@ class SitemapControllerTest extends \PHPUnit_Framework_TestCase
         $siterootRequestMatcher = $this->prophesize(SiterootRequestMatcher::class);
         $siterootRequestMatcher->matchRequest($request)->willReturn($siteroot);
 
-        $controller = new SitemapController($generator->reveal(), $siterootRequestMatcher->reveal());
+        $controller = new SitemapController(
+            $generator->reveal(),
+            $siterootRequestMatcher->reveal()
+        );
 
         $result = $controller->indexAction($request);
 
@@ -60,7 +64,7 @@ class SitemapControllerTest extends \PHPUnit_Framework_TestCase
 
         $siteroot = new Siteroot('foo');
 
-        $generator = $this->prophesize(SitemapGeneratorInterface::class);
+        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
         $generator->generateSitemapIndex($siteroot)->willReturn('bar');
 
         $siterootRequestMatcher = $this->prophesize(SiterootRequestMatcher::class);

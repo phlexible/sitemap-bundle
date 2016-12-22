@@ -23,7 +23,7 @@ interface NodeUrlsetGeneratorInterface
 {
     /**
      * @param ContentTreeNode $treeNode
-     * @param string $language
+     * @param string          $language
      *
      * @return Urlset|null
      */

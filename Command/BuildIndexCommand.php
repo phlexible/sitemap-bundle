@@ -16,21 +16,20 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Build cached XML sitemap files for a given site root ID, or for all site roots.
+ * Build cached XML sitemap index files for a given site root ID, or for all site roots.
  *
- * @author Jens Schulze <jdschulze@brainbits.net>
+ * @author Matthias Harmuth <mharmuth@brainbits.net>
  */
-class BuildCommand extends Command
+class BuildIndexCommand extends Command
 {
     /**
      * @var SitemapIndexGeneratorInterface
      */
-    private $sitemapGenerator;
+    private $sitemapIndexGenerator;
 
     /**
      * @var SiterootManagerInterface
@@ -40,12 +39,14 @@ class BuildCommand extends Command
     /**
      * BuildCommand constructor.
      *
-     * @param SitemapIndexGeneratorInterface $sitemapGenerator
+     * @param SitemapIndexGeneratorInterface $sitemapIndexGenerator
      * @param SiterootManagerInterface       $siterootManager
      */
-    public function __construct(SitemapIndexGeneratorInterface $sitemapGenerator, SiterootManagerInterface $siterootManager)
-    {
-        $this->sitemapGenerator = $sitemapGenerator;
+    public function __construct(
+        SitemapIndexGeneratorInterface $sitemapIndexGenerator,
+        SiterootManagerInterface $siterootManager
+    ) {
+        $this->sitemapIndexGenerator = $sitemapIndexGenerator;
         $this->siterootManager = $siterootManager;
 
         parent::__construct();
@@ -56,18 +57,12 @@ class BuildCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('sitemap:build')
-            ->setDescription('Build and store a new sitemap XML file for the given site root.')
+        $this->setName('sitemap:index:build')
+            ->setDescription('Build and store a new sitemap index XML file for the given site root.')
             ->addArgument(
                 'siterootId',
                 InputArgument::OPTIONAL,
                 'Site root identifier. If no identifier is given, regenerate all sitemaps.'
-            )
-            ->addOption(
-                'language',
-                'l',
-                InputOption::VALUE_REQUIRED,
-                'Generate sitemap for a given language.'
             );
     }
 
@@ -90,11 +85,9 @@ class BuildCommand extends Command
             $siteroots = $this->siterootManager->findAll();
         }
 
-        $language = $input->getOption('language');
-
         foreach ($siteroots as $siteroot) {
-            $this->sitemapGenerator->generateSitemap($siteroot, $language, true);
-            $style->success("Generated new sitemap cache file for language '$language'");
+            $this->sitemapIndexGenerator->generateSitemapIndex($siteroot, true);
+            $style->success("Generated new sitemap index cache file for {$siteroot->getId()}");
         }
 
         return 0;
