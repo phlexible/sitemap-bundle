@@ -16,7 +16,6 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -59,15 +58,14 @@ class BuildCommand extends Command
         $this->setName('sitemap:build')
             ->setDescription('Build and store a new sitemap XML file for the given site root.')
             ->addArgument(
+                'language',
+                InputArgument::REQUIRED,
+                'The language to generate sitemap for.'
+            )
+            ->addArgument(
                 'siterootId',
                 InputArgument::OPTIONAL,
                 'Site root identifier. If no identifier is given, regenerate all sitemaps.'
-            )
-            ->addOption(
-                'language',
-                'l',
-                InputOption::VALUE_REQUIRED,
-                'Generate sitemap for a given language.'
             );
     }
 
@@ -90,11 +88,11 @@ class BuildCommand extends Command
             $siteroots = $this->siterootManager->findAll();
         }
 
-        $language = $input->getOption('language');
+        $language = $input->getArgument('language');
 
         foreach ($siteroots as $siteroot) {
             $this->sitemapGenerator->generateSitemap($siteroot, $language, true);
-            $style->success("Generated new sitemap cache file for language '$language'");
+            $style->success("Generated new sitemap cache file for '{$siteroot->getId()}' and language '$language'");
         }
 
         return 0;

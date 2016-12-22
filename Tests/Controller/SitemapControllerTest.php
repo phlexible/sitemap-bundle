@@ -31,26 +31,28 @@ class SitemapControllerTest extends \PHPUnit_Framework_TestCase
     public function testGenerateSitemap()
     {
         $request = new Request();
-        $request->query->set('language', 'de');
+        $request->setLocale('de');
 
         $siteroot = new Siteroot('foo');
 
         $generator = $this->prophesize(SitemapGeneratorInterface::class);
-
         $generator->generateSitemap(
             $siteroot,
-            $request->query->get('language')
+            $request->getLocale()
         )->willReturn('bar');
+
+        $generatorIndex = $this->prophesize(SitemapIndexGeneratorInterface::class);
 
         $siterootRequestMatcher = $this->prophesize(SiterootRequestMatcher::class);
         $siterootRequestMatcher->matchRequest($request)->willReturn($siteroot);
 
         $controller = new SitemapController(
             $generator->reveal(),
+            $generatorIndex->reveal(),
             $siterootRequestMatcher->reveal()
         );
 
-        $result = $controller->indexAction($request);
+        $result = $controller->sitemapAction($request);
 
         $this->assertInstanceOf(Response::class, $result);
         $this->assertSame(200, $result->getStatusCode());
@@ -64,13 +66,19 @@ class SitemapControllerTest extends \PHPUnit_Framework_TestCase
 
         $siteroot = new Siteroot('foo');
 
-        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
-        $generator->generateSitemapIndex($siteroot)->willReturn('bar');
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
+
+        $generatorIndex = $this->prophesize(SitemapIndexGeneratorInterface::class);
+        $generatorIndex->generateSitemapIndex($siteroot)->willReturn('bar');
 
         $siterootRequestMatcher = $this->prophesize(SiterootRequestMatcher::class);
         $siterootRequestMatcher->matchRequest($request)->willReturn($siteroot);
 
-        $controller = new SitemapController($generator->reveal(), $siterootRequestMatcher->reveal());
+        $controller = new SitemapController(
+            $generator->reveal(),
+            $generatorIndex->reveal(),
+            $siterootRequestMatcher->reveal()
+        );
 
         $result = $controller->indexAction($request);
 

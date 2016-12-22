@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Tests\Command;
 
 use Phlexible\Bundle\SitemapBundle\Command\BuildCommand;
+use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
@@ -28,7 +29,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuildForAllSiteroots()
     {
-        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
 
         $siteroot = new Siteroot('foo');
 
@@ -38,16 +39,16 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array());
+        $commandTester->execute(array('language' => 'de'));
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Generated new sitemap cache file for foo', $output);
+        $this->assertContains("Generated new sitemap cache file for 'foo'", $output);
     }
 
     public function testBuildForSpecificSiteroot()
     {
-        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
 
         $siteroot = new Siteroot('foo');
 
@@ -57,16 +58,18 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array('siterootId' => 'foo'));
+        $commandTester->execute(
+            array('siterootId' => 'foo', 'language' => 'de')
+        );
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Generated new sitemap cache file for foo', $output);
+        $this->assertContains("Generated new sitemap cache file for 'foo'", $output);
     }
 
     public function testBuildForInvalidSiteroot()
     {
-        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
 
         $siterootManager = $this->prophesize(SiterootManagerInterface::class);
         $siterootManager->find('bar')->willReturn(null);
@@ -74,7 +77,9 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $command = new BuildCommand($generator->reveal(), $siterootManager->reveal());
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array('siterootId' => 'bar'));
+        $commandTester->execute(
+            array('siterootId' => 'bar', 'language' => 'de')
+        );
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
@@ -85,7 +90,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildForGivenLanguage()
     {
-        $generator = $this->prophesize(SitemapIndexGeneratorInterface::class);
+        $generator = $this->prophesize(SitemapGeneratorInterface::class);
 
         $siteroot = new Siteroot('foo');
         $language = 'de';
@@ -99,12 +104,12 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             array(
                 'siterootId' => 'foo',
-                '--language' => 'de'
+                'language' => 'de'
             )
         );
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains("Generated new sitemap cache file for language '$language'", $output);
+        $this->assertContains("Generated new sitemap cache file for 'foo' and language '$language'", $output);
     }
 }

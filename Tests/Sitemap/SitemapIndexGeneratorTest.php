@@ -31,8 +31,8 @@ class SitemapIndexGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateSitemapIndex()
     {
         $siterootId = '1bcaab4d-098e-4737-ac93-53cae9d83887';
-        $url1 = 'http://www.test.de?language=de';
-        $url2 = 'http://www.test.de?language=en';
+        $url1 = 'http://www.test.de?sitemap-de.xml';
+        $url2 = 'http://www.test.de?sitemap-en.xml';
 
         $siteRoot = new Siteroot($siterootId);
 
@@ -49,8 +49,8 @@ class SitemapIndexGeneratorTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $router = $this->prophesize(Router::class);
-        $router->generate('sitemap_2index', ['language' => 'de'], 0)->shouldBeCalled()->willReturn($url1);
-        $router->generate('sitemap_2index', ['language' => 'en'], 0)->shouldBeCalled()->willReturn($url2);
+        $router->generate('sitemap_2sitemap', ['_locale' => 'de'], 0)->shouldBeCalled()->willReturn($url1);
+        $router->generate('sitemap_2sitemap', ['_locale' => 'en'], 0)->shouldBeCalled()->willReturn($url2);
 
         $sitemapIndex = new SitemapIndexGenerator(
             $eventDispatcher->reveal(),
