@@ -67,7 +67,7 @@ class SitemapIndexGenerator implements SitemapIndexGeneratorInterface
 
         foreach ($this->availableLanguages as $language) {
             $loc = $this->router->generate(
-                'sitemap_2sitemap',
+                'sitemap_sitemap',
                 ['_locale' => $language],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );

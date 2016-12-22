@@ -49,8 +49,8 @@ class SitemapIndexGeneratorTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $router = $this->prophesize(Router::class);
-        $router->generate('sitemap_2sitemap', ['_locale' => 'de'], 0)->shouldBeCalled()->willReturn($url1);
-        $router->generate('sitemap_2sitemap', ['_locale' => 'en'], 0)->shouldBeCalled()->willReturn($url2);
+        $router->generate('sitemap_sitemap', ['_locale' => 'de'], 0)->shouldBeCalled()->willReturn($url1);
+        $router->generate('sitemap_sitemap', ['_locale' => 'en'], 0)->shouldBeCalled()->willReturn($url2);
 
         $sitemapIndex = new SitemapIndexGenerator(
             $eventDispatcher->reveal(),

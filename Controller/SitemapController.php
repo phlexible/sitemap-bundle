@@ -60,7 +60,7 @@ class SitemapController
      * @param Request $request
      * @return Response
      *
-     * @Route("/sitemap.xml", name="sitemap_2index")
+     * @Route("/sitemap.xml", name="sitemap_index")
      */
     public function indexAction(Request $request)
     {
@@ -74,7 +74,7 @@ class SitemapController
      * @param Request $request
      * @return Response
      *
-     * @Route("/sitemap-{_locale}.xml", name="sitemap_2sitemap")
+     * @Route("/sitemap-{_locale}.xml", name="sitemap_sitemap")
      */
     public function sitemapAction(Request $request)
     {
