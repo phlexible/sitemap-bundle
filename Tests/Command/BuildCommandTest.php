@@ -15,6 +15,7 @@ use Phlexible\Bundle\SitemapBundle\Command\BuildCommand;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -24,7 +25,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Command\BuildCommand
  */
-class BuildCommandTest extends \PHPUnit_Framework_TestCase
+class BuildCommandTest extends TestCase
 {
     public function testBuildForAllSiteroots()
     {

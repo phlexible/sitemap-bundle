@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use PHPUnit\Framework\TestCase;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
@@ -21,7 +22,7 @@ use Thepixeldeveloper\Sitemap\Urlset;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Event\UrlsetEvent
  */
-class UrlsetEventTest extends \PHPUnit_Framework_TestCase
+class UrlsetEventTest extends TestCase
 {
     public function testUrlsetEvent()
     {

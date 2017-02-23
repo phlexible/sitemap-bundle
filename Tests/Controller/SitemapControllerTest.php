@@ -16,6 +16,7 @@ use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Controller\SitemapController
  */
-class SitemapControllerTest extends \PHPUnit_Framework_TestCase
+class SitemapControllerTest extends TestCase
 {
     public function testGenerateSitemap()
     {

@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
+use PHPUnit\Framework\TestCase;
 use Thepixeldeveloper\Sitemap\Url;
 
 /**
@@ -21,7 +22,7 @@ use Thepixeldeveloper\Sitemap\Url;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Event\UrlEvent
  */
-class UrlEventTest extends \PHPUnit_Framework_TestCase
+class UrlEventTest extends TestCase
 {
     public function testUrlEvent()
     {

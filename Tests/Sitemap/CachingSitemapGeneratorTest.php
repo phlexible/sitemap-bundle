@@ -16,6 +16,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use Phlexible\Bundle\SitemapBundle\Sitemap\CachingSitemapGenerator;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Caching sitemap generator test.
@@ -24,7 +25,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\CachingSitemapGenerator
  */
-class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
+class CachingSitemapGeneratorTest extends TestCase
 {
     /**
      * @var vfsStreamDirectory

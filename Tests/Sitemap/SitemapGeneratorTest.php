@@ -19,6 +19,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTree;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Thepixeldeveloper\Sitemap\Url;
@@ -31,7 +32,7 @@ use Thepixeldeveloper\Sitemap\Urlset;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator
  */
-class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
+class SitemapGeneratorTest extends TestCase
 {
     public function testGenerateSitemap()
     {

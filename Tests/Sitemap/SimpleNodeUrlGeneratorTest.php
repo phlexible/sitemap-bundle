@@ -15,6 +15,7 @@ use Phlexible\Bundle\SitemapBundle\Event\UrlEvent;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SimpleNodeUrlGenerator;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Router;
@@ -27,7 +28,7 @@ use Thepixeldeveloper\Sitemap\Url;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\SimpleNodeUrlGenerator
  */
-class SimpleNodeUrlGeneratorTest extends \PHPUnit_Framework_TestCase
+class SimpleNodeUrlGeneratorTest extends TestCase
 {
     public function testGenerateUrl()
     {

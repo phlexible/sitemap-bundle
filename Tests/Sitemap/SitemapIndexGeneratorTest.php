@@ -15,6 +15,7 @@ use Phlexible\Bundle\SitemapBundle\Event\SitemapIndexEvent;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGenerator;
 use Phlexible\Bundle\SitemapBundle\SitemapEvents;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Router;
@@ -26,7 +27,7 @@ use Symfony\Component\Routing\Router;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator
  */
-class SitemapIndexGeneratorTest extends \PHPUnit_Framework_TestCase
+class SitemapIndexGeneratorTest extends TestCase
 {
     public function testGenerateSitemapIndex()
     {

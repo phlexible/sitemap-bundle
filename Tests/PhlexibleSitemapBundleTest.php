@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Tests;
 
 use Phlexible\Bundle\SitemapBundle\PhlexibleSitemapBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Phlexible sitemap bundle test.
@@ -20,7 +21,7 @@ use Phlexible\Bundle\SitemapBundle\PhlexibleSitemapBundle;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\PhlexibleSitemapBundle
  */
-class PhlexibleSitemapBundleTest extends \PHPUnit_Framework_TestCase
+class PhlexibleSitemapBundleTest extends TestCase
 {
     public function testBundle()
     {

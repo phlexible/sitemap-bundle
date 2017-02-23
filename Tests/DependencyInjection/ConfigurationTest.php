@@ -13,6 +13,7 @@ namespace Phlexible\Bundle\SitemapBundle\Test\DependencyInjection;
 
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use Phlexible\Bundle\SitemapBundle\DependencyInjection\Configuration;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Configuration test.
@@ -21,7 +22,7 @@ use Phlexible\Bundle\SitemapBundle\DependencyInjection\Configuration;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\DependencyInjection\Configuration
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     use ConfigurationTestCaseTrait;
 

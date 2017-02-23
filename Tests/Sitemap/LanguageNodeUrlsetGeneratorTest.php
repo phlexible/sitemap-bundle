@@ -14,6 +14,7 @@ namespace Phlexible\Bundle\SitemapBundle\Tests\Sitemap;
 use Phlexible\Bundle\SitemapBundle\Sitemap\LanguageNodeUrlsetGenerator;
 use Phlexible\Bundle\SitemapBundle\Sitemap\NodeUrlGeneratorInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
+use PHPUnit\Framework\TestCase;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
@@ -24,7 +25,7 @@ use Thepixeldeveloper\Sitemap\Urlset;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\LanguageNodeUrlsetGenerator
  */
-class LanguageNodeUrlsetGeneratorTest extends \PHPUnit_Framework_TestCase
+class LanguageNodeUrlsetGeneratorTest extends TestCase
 {
     public function testGenerateUrl()
     {

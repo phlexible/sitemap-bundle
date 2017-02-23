@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Event;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use PHPUnit\Framework\TestCase;
 use Thepixeldeveloper\Sitemap\SitemapIndex;
 
 /**
@@ -21,7 +22,7 @@ use Thepixeldeveloper\Sitemap\SitemapIndex;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Event\SitemapIndexEvent
  */
-class SitemapIndexEventTest extends \PHPUnit_Framework_TestCase
+class SitemapIndexEventTest extends TestCase
 {
     public function testSitemapIndexEvent()
     {

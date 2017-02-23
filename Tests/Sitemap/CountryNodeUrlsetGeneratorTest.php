@@ -17,6 +17,7 @@ use Phlexible\Bundle\SitemapBundle\Sitemap\NodeUrlGeneratorInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Country node urlset generator test.
@@ -25,7 +26,7 @@ use Thepixeldeveloper\Sitemap\Urlset;
  *
  * @covers \Phlexible\Bundle\SitemapBundle\Sitemap\CountryNodeUrlsetGenerator
  */
-class CountryNodeUrlsetGeneratorTest extends \PHPUnit_Framework_TestCase
+class CountryNodeUrlsetGeneratorTest extends TestCase
 {
     public function testGenerateUrl()
     {
