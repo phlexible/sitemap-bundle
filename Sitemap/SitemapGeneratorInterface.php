@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Generates a sitemap for a given site root
+ * Generates a sitemap for a given site root.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
@@ -22,8 +22,9 @@ interface SitemapGeneratorInterface
 {
     /**
      * @param Siteroot $siteroot
-     * @param string $language
-     * @param bool $force
+     * @param string   $language
+     * @param bool     $force
+     *
      * @return string
      */
     public function generateSitemap(Siteroot $siteroot, $language, $force = false);

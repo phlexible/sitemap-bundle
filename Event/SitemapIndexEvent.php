@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\SitemapIndex;
 
 /**
- * SitemapIndex event
+ * SitemapIndex event.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  */

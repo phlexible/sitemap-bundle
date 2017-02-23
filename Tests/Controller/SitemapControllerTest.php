@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Sitemap controller test
+ * Sitemap controller test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

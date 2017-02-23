@@ -15,7 +15,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Thepixeldeveloper\Sitemap\SitemapIndex;
 
 /**
- * SitemapIndex event test
+ * SitemapIndex event test.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  *

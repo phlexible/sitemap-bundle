@@ -12,29 +12,29 @@
 namespace Phlexible\Bundle\SitemapBundle;
 
 /**
- * Sitemap events
+ * Sitemap events.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
 class SitemapEvents
 {
     /**
-     * Fired before URL generation
+     * Fired before URL generation.
      */
     const BEFORE_URL_GENERATION = 'phlexible_sitemap.before_url_generation';
 
     /**
-     * Fired after URL generation
+     * Fired after URL generation.
      */
     const URL_GENERATION = 'phlexible_sitemap.url_generation';
 
     /**
-     * Fired after URLset generation
+     * Fired after URLset generation.
      */
     const URLSET_GENERATION = 'phlexible_sitemap.urlset_generation';
 
     /**
-     * Fired after sitemap index gemeration
+     * Fired after sitemap index gemeration.
      */
     const SITEMAPINDEX_GENERATION = 'phlexible_sitemap.sitemapindex_generation';
 }

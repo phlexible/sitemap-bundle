@@ -23,7 +23,7 @@ use Thepixeldeveloper\Sitemap\Output;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Generates a sitemap for a given site root
+ * Generates a sitemap for a given site root.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
@@ -90,10 +90,10 @@ class SitemapGenerator implements SitemapGeneratorInterface
             /** @var ContentTreeNode $treeNode */
             $treeNode = $contentTree->get($childNode->getId());
 
-            /** @noinspection PhpUndefinedMethodInspection */
+            /* @noinspection PhpUndefinedMethodInspection */
             $contentTree->setLanguage($language);
 
-            /** @noinspection PhpParamsInspection */
+            /* @noinspection PhpParamsInspection */
             if (!$contentTree->isPublished($treeNode)) {
                 continue;
             }
@@ -129,6 +129,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
     /**
      * @param Urlset $urlSet
+     *
      * @return string
      */
     private function generateSitemapFromUrlSet($urlSet)

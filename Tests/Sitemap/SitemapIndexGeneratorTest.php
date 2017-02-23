@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Router;
 
 /**
- * Sitemap index generator test
+ * Sitemap index generator test.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  *

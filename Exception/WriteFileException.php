@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Write file exception
+ * Write file exception.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

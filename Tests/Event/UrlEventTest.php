@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Thepixeldeveloper\Sitemap\Url;
 
 /**
- * Url event test
+ * Url event test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

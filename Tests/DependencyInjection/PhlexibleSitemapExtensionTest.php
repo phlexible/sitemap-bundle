@@ -15,7 +15,7 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Phlexible\Bundle\SitemapBundle\DependencyInjection\PhlexibleSitemapExtension;
 
 /**
- * Phlexible sitemap extension test
+ * Phlexible sitemap extension test.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  *
@@ -29,7 +29,7 @@ class PhlexibleSitemapExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new PhlexibleSitemapExtension()
+            new PhlexibleSitemapExtension(),
         );
     }
 

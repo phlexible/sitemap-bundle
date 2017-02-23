@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Router;
 use Thepixeldeveloper\Sitemap\Url;
 
 /**
- * Simple node url generator test
+ * Simple node url generator test.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  *

@@ -18,7 +18,7 @@ use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Language node urlset generator test
+ * Language node urlset generator test.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  *

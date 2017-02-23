@@ -18,7 +18,7 @@ use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Caching sitemap generator test
+ * Caching sitemap generator test.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  *
@@ -137,5 +137,4 @@ class CachingSitemapGeneratorTest extends \PHPUnit_Framework_TestCase
         $sitemapCache = new CachingSitemapGenerator($sitemapGenerator->reveal(), $dir->url());
         $sitemapCache->generateSitemap($siteRoot, $language, false);
     }
-
 }
