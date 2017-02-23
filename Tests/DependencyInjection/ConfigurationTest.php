@@ -15,7 +15,7 @@ use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use Phlexible\Bundle\SitemapBundle\DependencyInjection\Configuration;
 
 /**
- * Configuration test
+ * Configuration test.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  *
@@ -37,7 +37,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertProcessedConfigurationEquals(
             array(
-                array()
+                array(),
             ),
             array(
                 'cache_dir' => '%kernel.cache_dir%/sitemap',
@@ -55,7 +55,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     'cache_dir' => 'cache',
                     'node_urlset_generator' => 'urlset',
                     'node_url_generator' => 'url',
-                )
+                ),
             ),
             array(
                 'cache_dir' => 'cache',

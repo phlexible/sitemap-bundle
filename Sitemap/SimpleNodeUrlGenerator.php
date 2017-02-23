@@ -83,7 +83,7 @@ class SimpleNodeUrlGenerator implements NodeUrlGeneratorInterface
     }
 
     /**
-     * Remove index scripts from URL paths
+     * Remove index scripts from URL paths.
      *
      * @param string $url
      *

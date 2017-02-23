@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
- * Sitemap controller
+ * Sitemap controller.
  *
  * @Route(service="phlexible_sitemap.sitemap_controller")
  */
@@ -58,6 +58,7 @@ class SitemapController
 
     /**
      * @param Request $request
+     *
      * @return Response
      *
      * @Route("/sitemap.xml", name="sitemap_index")
@@ -72,6 +73,7 @@ class SitemapController
 
     /**
      * @param Request $request
+     *
      * @return Response
      *
      * @Route("/sitemap-{_locale}.xml", name="sitemap_sitemap")

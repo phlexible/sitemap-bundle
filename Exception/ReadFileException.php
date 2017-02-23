@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Read file exception
+ * Read file exception.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

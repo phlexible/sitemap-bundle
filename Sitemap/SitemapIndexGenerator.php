@@ -22,7 +22,7 @@ use Thepixeldeveloper\Sitemap\Sitemap;
 use Thepixeldeveloper\Sitemap\SitemapIndex;
 
 /**
- * Generates a sitemap index for a given site root
+ * Generates a sitemap index for a given site root.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  */
@@ -84,6 +84,7 @@ class SitemapIndexGenerator implements SitemapIndexGeneratorInterface
 
     /**
      * @param SitemapIndex $sitemapIndex
+     *
      * @return string
      */
     private function generateSitemapFromSitemapIndex($sitemapIndex)

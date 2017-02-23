@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SitemapBundle\Sitemap;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Generates a sitemap index for a given site root
+ * Generates a sitemap index for a given site root.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  */
@@ -22,7 +22,8 @@ interface SitemapIndexGeneratorInterface
 {
     /**
      * @param Siteroot $siteroot
-     * @param bool $force
+     * @param bool     $force
+     *
      * @return string
      */
     public function generateSitemapIndex(Siteroot $siteroot, $force = false);

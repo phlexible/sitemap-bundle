@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Urlset event
+ * Urlset event.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

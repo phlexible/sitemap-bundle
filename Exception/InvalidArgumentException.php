@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Invalid argument exception
+ * Invalid argument exception.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

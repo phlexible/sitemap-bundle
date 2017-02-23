@@ -77,5 +77,4 @@ class CountryNodeUrlsetGenerator implements NodeUrlsetGeneratorInterface
 
         return $url;
     }
-
 }

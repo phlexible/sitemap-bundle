@@ -19,7 +19,7 @@ use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Country node urlset generator test
+ * Country node urlset generator test.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  *

@@ -43,7 +43,7 @@ class CachingSitemapGenerator implements SitemapGeneratorInterface
     public function __construct(SitemapGeneratorInterface $sitemapGenerator, $cacheDir)
     {
         $this->sitemapGenerator = $sitemapGenerator;
-        $this->cacheDir = rtrim($cacheDir, '/') . '/';
+        $this->cacheDir = rtrim($cacheDir, '/').'/';
     }
 
     /**
@@ -53,7 +53,7 @@ class CachingSitemapGenerator implements SitemapGeneratorInterface
     {
         $siteRootId = $siteroot->getId();
 
-        $filename = $this->cacheDir . $siteRootId . '-' . $language . '.xml';
+        $filename = $this->cacheDir.$siteRootId.'-'.$language.'.xml';
         $fileSystem = new Filesystem();
 
         if ($force || !$fileSystem->exists($filename)) {

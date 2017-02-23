@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SitemapBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Phlexible sitemap bundle
+ * Phlexible sitemap bundle.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

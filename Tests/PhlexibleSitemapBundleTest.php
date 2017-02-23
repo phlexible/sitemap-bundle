@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SitemapBundle\Tests;
 use Phlexible\Bundle\SitemapBundle\PhlexibleSitemapBundle;
 
 /**
- * Phlexible sitemap bundle test
+ * Phlexible sitemap bundle test.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  *

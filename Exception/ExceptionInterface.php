@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Exception interface
+ * Exception interface.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

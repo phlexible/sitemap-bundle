@@ -15,7 +15,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Urlset event test
+ * Urlset event test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

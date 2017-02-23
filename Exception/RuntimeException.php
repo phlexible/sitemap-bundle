@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SitemapBundle\Exception;
 
 /**
- * Runtime exception
+ * Runtime exception.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */

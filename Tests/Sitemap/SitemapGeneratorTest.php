@@ -21,12 +21,11 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTree;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Routing\Router;
 use Thepixeldeveloper\Sitemap\Url;
 use Thepixeldeveloper\Sitemap\Urlset;
 
 /**
- * Sitemap generator test
+ * Sitemap generator test.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  *
@@ -82,7 +81,7 @@ class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $result = $sitemap->generateSitemap($siteRoot, $language);
 
-        $expected = <<<EOF
+        $expected = <<<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
@@ -166,7 +165,7 @@ EOF;
 
         $result = $sitemap->generateSitemap($siteRoot, $language);
 
-        $expected = <<<EOF
+        $expected = <<<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>
 EOF;

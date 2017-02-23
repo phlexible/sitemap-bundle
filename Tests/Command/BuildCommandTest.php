@@ -13,13 +13,12 @@ namespace Phlexible\Bundle\SitemapBundle\Tests\Command;
 
 use Phlexible\Bundle\SitemapBundle\Command\BuildCommand;
 use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapGeneratorInterface;
-use Phlexible\Bundle\SitemapBundle\Sitemap\SitemapIndexGeneratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Build command test
+ * Build command test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -104,7 +103,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             array(
                 'siterootId' => 'foo',
-                'language' => 'de'
+                'language' => 'de',
             )
         );
 

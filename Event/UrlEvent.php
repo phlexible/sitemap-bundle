@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Thepixeldeveloper\Sitemap\Url;
 
 /**
- * Url event
+ * Url event.
  *
  * @author Jens Schulze <jdschulze@brainbits.net>
  */
